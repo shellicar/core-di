@@ -1,0 +1,110 @@
+# @shellicar/core-di
+
+A basic dependency injection library.
+
+## Motivation
+
+Coming from .NET I am used to DI frameworks/libraries such as `Autofac`, `Ninject`, `StructureMap`, `Unity`, and Microsoft's own `DependencyInjection`.
+
+I started using `InversifyJS`, and tried out some others along the way, such as `diod`.
+
+With TypeScript 5.0 generally available with non-experimental decorators, most DI libraries have not been updated, so I decided to create my own.
+
+## Features
+
+My set of features is simple, based on my current usage
+
+* Type-safe registration.
+```ts
+const services = createServiceCollection();
+abstract class IAbstract { abstract method(): void; }
+abstract class Concrete {}
+services.register(IAbstract).to(Concrete);
+//                                ^ Error
+```
+* Type-safe resolution.
+```ts
+const provider = services.buildProvider();
+const svc = provider.resolve(IMyService);
+//    ^ IMyService
+```
+* Provide factory methods for instantiating classes.
+```ts
+services.register(Redis).to(Redis, x => {
+  const options = x.resolve(IRedisOptions);
+  return new Redis({
+    port: options.port,
+    host: options.host,
+  });
+});
+```
+* Use property injection with decorators for simple dependency definition.
+```ts
+abstract class IDependency {}
+class Service implements IService {
+  @dependsOn(IDependency) private readonly dependency!: IDependency;
+}
+```
+* Provide multiple implementations for identifiers and provide a `resolveAll` method.
+* Define instance lifetime with simple builder pattern.
+
+```ts
+services.register(IAbstract).to(Concrete).singleton();
+```
+
+* Create scopes to allow "per-request" lifetimes.
+```ts
+const services = createServiceCollection();
+const provider = services.buildProvider();
+using scope = provider.createScope();
+```
+
+## Usage
+
+Check the test files for different usage scenarios.
+
+```ts
+import { dependsOn, createServiceCollection, enable } from '@shellicar/core-di';
+
+// Define the dependency interface
+abstract class IClock {
+  abstract now(): Date;
+}
+// And implementation
+class DefaultClock implements IClock {
+  now(): Date {
+    return new Date();
+  }
+}
+
+// Define your interface
+abstract class IDatePrinter {
+  abstract handle(): string;
+}
+// And implementation
+class DatePrinter implements IDatePrinter {
+  @dependsOn(IClock) public readonly clock!: IClock;
+
+  handle(): string {
+    return `The time is: ${this.clock.now().toISOString()}`;
+  }  
+}
+
+// Register and build provider
+const services = createServiceCollection();
+services.register(IClock).to(DefaultClock).singleton();
+services.register(IDatePrinter).to(DatePrinter).scoped();
+const sp = services.buildProvider();
+
+// Optionally create a scope
+using scope = sp.createScope();
+
+// Resolve the interface
+const svc = scope.resolve(IDatePrinter);
+console.log(svc.handle());
+```
+
+## Inspired by
+
+* [InversifyJS](https://github.com/inversify/InversifyJS)
+* [Microsoft.Extensions.DependencyInjection](https://github.com/dotnet/runtime/tree/main/src/libraries/Microsoft.Extensions.DependencyInjection)
