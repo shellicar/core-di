@@ -1,6 +1,6 @@
 {
   "name": "@shellicar/core-di",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A basic dependency injection library",
   "repository": {
     "type": "git",
@@ -61,6 +61,6 @@
     "typescript-eslint": "^8.3.0"
   },
   "dependencies": {
-    "reflect-metadata": "^0.2.2"
+    "@abraham/reflection": "^0.12.0"
   }
 }

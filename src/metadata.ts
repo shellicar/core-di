@@ -1,5 +1,4 @@
-import 'reflect-metadata/lite';
-import type {} from 'reflect-metadata';
+import '@abraham/reflection';
 import type { MetadataType, SourceType } from './types';
 
 export const getMetadata = <T extends SourceType>(key: string, obj: object): MetadataType<T> | undefined => {
