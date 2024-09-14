@@ -5,7 +5,7 @@ import { createServiceCollection } from '../src';
 abstract class IAbstract {}
 class Concreate implements IAbstract {}
 
-describe('Scoped services', () => {
+describe('Transient lifetime', () => {
   const services = createServiceCollection();
   services.register(IAbstract).to(Concreate).transient();
   const provider = services.buildProvider();

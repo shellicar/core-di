@@ -1,21 +1,24 @@
 {
   "name": "@shellicar/core-di",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A basic dependency injection library",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/shellicar/core-di.git"
   },
   "private": false,
-  "packageManager": "pnpm@9.9.0",
-  "main": "./dist/cjs/index.js",
-  "module": "./dist/esm/index.js",
-  "types": "./dist/types/index.d.ts",
+  "packageManager": "pnpm@9.10.0",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.cts",
   "exports": {
-    ".": {
-      "import": "./dist/esm/index.js",
-      "require": "./dist/cjs/index.js",
-      "types": "./dist/types/index.d.ts"
+    "require": {
+      "types": "./dist/index.d.cts",
+      "default": "./dist/index.cjs"
+    },
+    "import": {
+      "types": "./dist/index.d.mts",
+      "default": "./dist/index.mjs"
     }
   },
   "files": [
@@ -23,10 +26,7 @@
   ],
   "scripts": {
     "clean": "rimraf dist",
-    "build": "run-p build:esm build:cjs build:types",
-    "build:esm": "tsc -p tsconfig.esm.json",
-    "build:cjs": "tsc -p tsconfig.cjs.json",
-    "build:types": "tsc -p tsconfig.types.json",
+    "build": "pkgroll --minify --sourcemap --clean-dist",
     "check": "tsc --noEmit --composite false --skipLibCheck",
     "test": "mocha",
     "lint": "eslint .",
@@ -45,20 +45,21 @@
   },
   "homepage": "https://github.com/shellicar/core-di#readme",
   "devDependencies": {
-    "@stylistic/eslint-plugin": "^2.6.4",
-    "@types/mocha": "^10.0.7",
-    "@types/node": "^20.16.2",
-    "@typescript-eslint/parser": "^8.3.0",
-    "eslint": "^9.9.0",
+    "@stylistic/eslint-plugin": "^2.8.0",
+    "@types/mocha": "^10.0.8",
+    "@types/node": "^22.5.5",
+    "@typescript-eslint/parser": "^8.5.0",
+    "eslint": "^9.10.0",
     "eslint-plugin-prefer-arrow-functions": "^3.4.1",
-    "eslint-plugin-turbo": "^2.1.1",
+    "eslint-plugin-turbo": "^2.1.2",
     "eslint-plugin-unicorn": "^55.0.0",
     "mocha": "^10.7.3",
-    "npm-run-all2": "^6.2.2",
+    "npm-run-all2": "^6.2.3",
+    "pkgroll": "^2.5.0",
     "rimraf": "^6.0.1",
-    "tsx": "^4.19.0",
-    "typescript": "^5.5.4",
-    "typescript-eslint": "^8.3.0"
+    "tsx": "^4.19.1",
+    "typescript": "^5.6.2",
+    "typescript-eslint": "^8.5.0"
   },
   "dependencies": {
     "@abraham/reflection": "^0.12.0"

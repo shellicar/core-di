@@ -1,7 +1,7 @@
 import { log } from './debug';
 import { DesignDependenciesKey, Lifetime } from './constants';
-import type { IServiceProvider, IDisposable, IServiceCollection} from './interfaces';
-import { IServiceScope } from './interfaces';
+import type { IDisposable, IServiceCollection} from './interfaces';
+import { IServiceScope, IServiceProvider} from './interfaces';
 import { getMetadata } from './metadata';
 import type { ServiceIdentifier, ServiceDescriptor, ServiceImplementation, SourceType } from './types';
 import { SelfDependencyError, MultipleRegistrationError, UnregisteredServiceError } from './errors';
@@ -20,6 +20,10 @@ export class ServiceProvider implements IServiceProvider, IServiceScope {
     private services: IServiceCollection,
     private singletons = createResolveMap(),
   ) {}
+  
+  public get Services(): IServiceCollection {
+    return this.services;
+  }
 
   [Symbol.dispose]() {
     this.created.forEach(x => x[Symbol.dispose]());
@@ -77,7 +81,7 @@ export class ServiceProvider implements IServiceProvider, IServiceScope {
     identifier: ServiceIdentifier<T>,
     currentResolve = createResolveMap<T>(),
   ): T {
-    if (identifier.prototype === IServiceScope.prototype) {
+    if (identifier.prototype === IServiceScope.prototype || identifier.prototype === IServiceProvider.prototype) {
       return this as unknown as T;
     }
 
@@ -99,14 +103,14 @@ export class ServiceProvider implements IServiceProvider, IServiceScope {
       const factory = descriptor.factory;
       const resolve = (identifier: ServiceIdentifier<any>) => this.resolve(identifier, currentResolve);
       const resolveAll = (identifier: ServiceIdentifier<any>) => this.resolveAll(identifier, currentResolve);
-      const createScope = () => this.createScope();
+      const createScope = this.createScope.bind(this);
 
       // proxy requests to keep current resolved types
       instance = factory({
-        resolve: resolve,
-        resolveAll: resolveAll,
-        createScope: createScope,
-        // [Symbol.dispose]: () => {},
+        resolve,
+        resolveAll,
+        createScope,
+        get Services() { return this.Services; },
       });
     }
     else {
@@ -126,8 +130,8 @@ export class ServiceProvider implements IServiceProvider, IServiceScope {
     return instance;
   }
 
-  public createScope(): IServiceScope & IDisposable {
-    return new ServiceProvider(this.services, this.singletons);
+  public createScope(): IServiceProvider & IDisposable {
+    return new ServiceProvider(this.services.clone(), this.singletons);
   }
 
   private setDependencies<T extends SourceType>(

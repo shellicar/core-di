@@ -15,7 +15,7 @@ class Concreate implements IAbstract, IDisposable {
   }
 }
 
-describe('Scoped services', () => {
+describe('Singleton lifetime', () => {
   const services = createServiceCollection();
   services.register(IAbstract).to(Concreate).singleton();
   const provider = services.buildProvider();

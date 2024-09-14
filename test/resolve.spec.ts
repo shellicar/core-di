@@ -22,7 +22,7 @@ class Top implements ITop {
   @dependsOn(IMiddle) middle2!: IMiddle;
 }
 
-describe('Scoped services', () => {
+describe('Resolve lifetime', () => {
   const services = createServiceCollection();
   services.register(IBottom).to(Bottom);
   services.register(IMiddle).to(Middle);

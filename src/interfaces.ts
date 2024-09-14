@@ -14,7 +14,8 @@ export abstract class IServiceScope {
 }
 
 export abstract class IServiceProvider extends IServiceScope {
-  public abstract createScope(): IServiceScope & IDisposable;
+  public abstract get Services(): IServiceCollection;
+  public abstract createScope(): IServiceProvider & IDisposable;
 }
 
 export abstract class IServiceCollection {

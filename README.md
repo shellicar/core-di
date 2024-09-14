@@ -59,6 +59,12 @@ const provider = services.buildProvider();
 using scope = provider.createScope();
 ```
 
+* Register classes during a scope
+```ts
+using scope = provider.createScope();
+scope.Services.register(IContext).to(Context);
+```
+
 ## Usage
 
 Check the test files for different usage scenarios.
