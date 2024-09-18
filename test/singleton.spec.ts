@@ -1,4 +1,4 @@
-import { equal } from 'node:assert/strict';
+import { equal, ok } from 'node:assert/strict';
 import { describe, it } from 'mocha';
 import { createServiceCollection, type IDisposable } from '../src';
 
@@ -36,6 +36,6 @@ describe('Singleton lifetime', () => {
   it('does not dispose singletons', () => {
     const svc2 = scoped.resolve(IAbstract);
     scoped[Symbol.dispose]();
-    equal(svc2.disposed, false);
+    ok(!svc2.disposed);
   });
 });

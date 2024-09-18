@@ -1,4 +1,4 @@
-import type { SourceType, ServiceBuilder, ServiceDescriptor, ServiceIdentifier, ServiceModuleType } from './types';
+import type { SourceType, ServiceBuilder, ServiceDescriptor, ServiceIdentifier, ServiceModuleType, ServiceCollectionOptions } from './types';
 
 export abstract class IDisposable {
   public abstract [Symbol.dispose]: () => void;
@@ -19,6 +19,7 @@ export abstract class IServiceProvider extends IServiceScope {
 }
 
 export abstract class IServiceCollection {
+  public abstract readonly options: ServiceCollectionOptions;
   public abstract get<T extends SourceType>(key: ServiceIdentifier<T>): ServiceDescriptor<T>[];
   public abstract register<T extends SourceType>(identifier: ServiceIdentifier<T>): ServiceBuilder<T>;
   public abstract registerModules(modules: ServiceModuleType[]): void;

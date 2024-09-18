@@ -1,6 +1,6 @@
-import { equal } from 'node:assert/strict';
 import { describe, it } from 'mocha';
 import { dependsOn, IDisposable, createServiceCollection } from '../src';
+import { ok } from 'node:assert/strict';
 
 abstract class IBottom {}
 abstract class ITop extends IDisposable {
@@ -29,11 +29,11 @@ describe('Disposable services', () => {
   it('will dispose created services', () => {
     const svc = scoped.resolve(ITop);
     scoped[Symbol.dispose]();
-    equal(svc.disposed, true);
+    ok(svc.disposed);
   });
 
   it('service not disposed normally', () => {
     const svc = scoped.resolve(ITop);
-    equal(svc.disposed, false);
+    ok(!svc.disposed);
   });
 });

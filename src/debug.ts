@@ -1,4 +1,4 @@
-
+// TODO: Allow configuration of logger in options
 class DebugLogger {
   private debugging = false;
 

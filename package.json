@@ -1,6 +1,6 @@
 {
   "name": "@shellicar/core-di",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "A basic dependency injection library",
   "repository": {
     "type": "git",

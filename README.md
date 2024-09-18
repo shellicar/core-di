@@ -64,6 +64,17 @@ using scope = provider.createScope();
 using scope = provider.createScope();
 scope.Services.register(IContext).to(Context);
 ```
+* Override registrations (e.g.: for testing)
+```ts
+import { ok } from 'node:assert/strict';
+const services = createServiceCollection({ registrationMode: ResolveMultipleMode.LastRegistered });
+services.register(IOptions).to(Options);
+// Later
+services.register(IOptions).to(MockOptions);
+const provider = services.buildProvider();
+const options = provider.resolve(IOptions);
+ok(options instanceof MockOptions);
+```
 
 ## Usage
 

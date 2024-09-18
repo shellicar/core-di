@@ -3,8 +3,9 @@ import { DesignDependenciesKey, Lifetime } from './constants';
 import type { IDisposable, IServiceCollection} from './interfaces';
 import { IServiceScope, IServiceProvider} from './interfaces';
 import { getMetadata } from './metadata';
-import type { ServiceIdentifier, ServiceDescriptor, ServiceImplementation, SourceType } from './types';
-import { SelfDependencyError, MultipleRegistrationError, UnregisteredServiceError } from './errors';
+import type { ServiceIdentifier, ServiceDescriptor, ServiceImplementation, SourceType} from './types';
+import { ResolveMultipleMode } from './types';
+import { SelfDependencyError, MultipleRegistrationError, UnregisteredServiceError, ServiceCreationError } from './errors';
 
 type Id<T extends SourceType> = ServiceIdentifier<T> | ServiceImplementation<T>;
 
@@ -89,11 +90,13 @@ export class ServiceProvider implements IServiceProvider, IServiceScope {
     if (descriptors.length === 0) {
       throw new UnregisteredServiceError(identifier);
     }
+    
     if (descriptors.length > 1) {
-      throw new MultipleRegistrationError(identifier);
+      if (this.Services.options.registrationMode === ResolveMultipleMode.Error) {
+        throw new MultipleRegistrationError(identifier);
+      }
     }
-
-    const descriptor = descriptors[0];
+    const descriptor = descriptors[descriptors.length - 1];
     return this.resolveInternal(identifier, descriptor, currentResolve);
   }
 
@@ -118,10 +121,7 @@ export class ServiceProvider implements IServiceProvider, IServiceScope {
         instance = new descriptor.implementation();
       }
       catch (err) {
-        console.error(err, 'Error creating service', {
-          descriptor,
-        });
-        throw err;
+        throw new ServiceCreationError(descriptor.implementation, err);
       }
     }
     if (descriptor.lifetime !== Lifetime.Singleton && Symbol.dispose in instance) {

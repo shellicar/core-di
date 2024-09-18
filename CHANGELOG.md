@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.4] - 2024-09-18
+
+### Changed
+
+- Add ability to configure ServiceCollection/Provider.
+- Add ability to override registrations.
+
 ## [0.0.3] - 2024-09-15
 
 ### Changed
@@ -17,6 +24,7 @@
 
 Initial release.
 
+[0.0.4]: https://github.com/shellicar/core-di/releases/tag/0.0.4
 [0.0.3]: https://github.com/shellicar/core-di/releases/tag/0.0.3
 [0.0.2]: https://github.com/shellicar/core-di/releases/tag/0.0.2
 [0.0.1]: https://github.com/shellicar/core-di/releases/tag/0.0.1

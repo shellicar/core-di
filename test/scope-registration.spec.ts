@@ -1,7 +1,6 @@
-import { equal } from 'node:assert/strict';
+import { throws, equal } from 'node:assert/strict';
 import { describe, it } from 'mocha';
 import { createServiceCollection } from '../src';
-import { throws } from 'node:assert';
 import { UnregisteredServiceError } from '../src/errors';
 
 abstract class IContext {

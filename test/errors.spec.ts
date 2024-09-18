@@ -1,9 +1,13 @@
 import { createServiceCollection } from '../src';
 import { throws } from 'node:assert/strict';
-import { MultipleRegistrationError, UnregisteredServiceError } from '../src/errors';
+import { MultipleRegistrationError, ServiceError, UnregisteredServiceError } from '../src/errors';
+import { ResolveMultipleMode } from '../src/types';
+import { ok } from 'node:assert/strict';
+import { fail } from 'node:assert';
 
 abstract class IService {}
 class Service implements IService {}
+class OtherService implements IService {}
 
 describe('Unregistered', () => {
   const services = createServiceCollection();
@@ -17,4 +21,25 @@ describe('Multiple registrations', () => {
   services.register(IService).to(Service);
   const provider = services.buildProvider();
   throws(() => provider.resolve(IService), MultipleRegistrationError);
+});
+
+describe('Allow configuring registrations', () => {
+  const services = createServiceCollection({ registrationMode: ResolveMultipleMode.LastRegistered });
+  services.register(IService).to(Service);
+  services.register(IService).to(OtherService);
+  const provider = services.buildProvider();
+  const svc = provider.resolve(IService);
+  ok(svc instanceof OtherService);
+});
+
+describe('Catch errors', () => {
+  const services = createServiceCollection();
+  const provider = services.buildProvider();
+  try {
+    provider.resolve(IService);
+    fail('no error');
+  }
+  catch (err) {
+    ok(err instanceof ServiceError);
+  }
 });

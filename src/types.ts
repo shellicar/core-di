@@ -43,3 +43,17 @@ export type ServiceBuilder<T extends SourceType> = {
 };
 
 export type MetadataType<T extends SourceType> = Record<string | symbol, ServiceIdentifier<T>>;
+
+export const ResolveMultipleMode = {
+  Error: 'ERROR',
+  LastRegistered: 'LAST_REGISTERED',
+} as const;
+export type ResolveMultipleMode = (typeof ResolveMultipleMode)[keyof typeof ResolveMultipleMode];
+
+export const DefaultServiceCollectionOptions: ServiceCollectionOptions = {
+  registrationMode: ResolveMultipleMode.Error,
+};
+
+export type ServiceCollectionOptions = {
+  registrationMode: ResolveMultipleMode;
+};

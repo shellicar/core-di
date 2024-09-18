@@ -1,4 +1,4 @@
-import { equal } from 'node:assert';
+import { equal, ok } from 'node:assert/strict';
 import { createServiceCollection } from '../src';
 
 abstract class IClock {
@@ -38,7 +38,7 @@ describe('Can register abstract with factory', () => {
 
   it('will use factory', () => {
     scoped.resolve(IClock);
-    equal(created, true);
+    ok(created);
   });
 
   it('will use dependency', () => {
