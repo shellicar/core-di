@@ -2,32 +2,40 @@
 
 ## [0.1.0] - 2024-09-22
 
-- Add ability to customise logging
-- Add more tests and examples
+### Added
+
+- Ability to customise logging.
+- More tests and examples.
 
 ### Changed
+- Use `tsup` for build.
 
-- ???
+### Removed
+
+- `enable` and `disable` log functions.
 
 ## [0.0.4] - 2024-09-18
 
-### Changed
+### Added
 
-- Add ability to configure ServiceCollection/Provider.
-- Add ability to override registrations.
+- Ability to configure ServiceCollection/Provider.
+- Ability to override registrations.
 
 ## [0.0.3] - 2024-09-15
 
+### Added
+
+- Ability to register during scope.
+
 ### Changed
 
-- Add ability to register during scope.
 - Use `pkgroll` for build.
 
 ## [0.0.2] - 2024-08-31
 
 ### Changed
 
-- Use `@abraham/reflection` instead of `reflect-metadata`
+- Use `@abraham/reflection` instead of `reflect-metadata`.
 
 ## [0.0.1] - 2024-08-31
 

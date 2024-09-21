@@ -20,7 +20,7 @@ const services = createServiceCollection();
 abstract class IAbstract { abstract method(): void; }
 abstract class Concrete {}
 services.register(IAbstract).to(Concrete);
-//                                ^ Error
+//                              ^ Error
 ```
 * Type-safe resolution.
 ```ts
@@ -77,8 +77,6 @@ ok(options instanceof MockOptions);
 ```
 * Logging options
 ```ts
-import { createServiceCollection, ILogger, LogLevel } from '@shellicar/core-di';
-
 class CustomLogger extends ILogger {
   public override debug(message?: any, ...optionalParams: any[]): void {
     // custom implementation  

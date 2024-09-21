@@ -1,13 +1,13 @@
 {
   "name": "@shellicar/core-di",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A basic dependency injection library",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/shellicar/core-di.git"
   },
   "private": false,
-  "packageManager": "pnpm@9.10.0",
+  "packageManager": "pnpm@9.11.0",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -30,7 +30,8 @@
     "build:types": "tsup --dts-only --format mjs",
     "test": "mocha",
     "lint": "eslint .",
-    "prepublishOnly": "run-s build"
+    "prepublishOnly": "build",
+    "postpublish": "pnpm version --no-git-tag-version patch"
   },
   "keywords": [
     "dependency injection",
