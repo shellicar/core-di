@@ -2,10 +2,10 @@ import { ServiceProvider } from './ServiceProvider';
 import type { SourceType, InstanceFactory, ServiceBuilder, ServiceDescriptor, ServiceIdentifier, ServiceImplementation, Newable, ServiceCollectionOptions } from './types';
 import type { IServiceCollection, IServiceModule, IServiceProvider } from './interfaces';
 import { Lifetime } from './constants';
-import { log } from './debug';
+import type { ILogger } from './logger';
 
 export class ServiceCollection implements IServiceCollection {
-  constructor(public readonly options: ServiceCollectionOptions, private readonly services = new Map<ServiceIdentifier<any>, ServiceDescriptor<any>[]>()) {
+  constructor(private readonly logger: ILogger, public readonly options: ServiceCollectionOptions, private readonly services = new Map<ServiceIdentifier<any>, ServiceDescriptor<any>[]>()) {
   }
   
   public registerModules(modules: Newable<IServiceModule>[]): void {
@@ -36,7 +36,7 @@ export class ServiceCollection implements IServiceCollection {
   }
 
   private addService<T extends SourceType>(identifier: ServiceIdentifier<T>, descriptor: ServiceDescriptor<T>) {
-    log('Adding service', { identifier, descriptor });
+    this.logger.info('Adding service', { identifier, descriptor });
     let existing = this.services.get(identifier);
     if (existing == null) {
       existing = [];
@@ -52,11 +52,11 @@ export class ServiceCollection implements IServiceCollection {
       clonedMap.set(key, clonedDescriptors);
     }
 
-    return new ServiceCollection(this.options, clonedMap);
+    return new ServiceCollection(this.logger, this.options, clonedMap);
   }
 
   public buildProvider(): IServiceProvider {
     const cloned = this.clone(); 
-    return new ServiceProvider(cloned);
+    return new ServiceProvider(this.logger, cloned);
   }
 }

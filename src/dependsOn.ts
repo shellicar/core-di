@@ -11,6 +11,10 @@ const tagProperty = <T extends SourceType>(metadataKey: string, annotationTarget
   existing[name] = identifier;
 };
 
+/**
+ * declares a dependency, use on a class field
+ * @param identifier the identifier to depend on, i.e. the interface
+ */
 export const dependsOn = <T extends SourceType>(identifier: ServiceIdentifier<T>) => {
   return (value: undefined, ctx: ClassFieldDecoratorContext) => {
     return function (this: object, initialValue: any) {

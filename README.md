@@ -75,13 +75,43 @@ const provider = services.buildProvider();
 const options = provider.resolve(IOptions);
 ok(options instanceof MockOptions);
 ```
+* Logging options
+```ts
+import { createServiceCollection, ILogger, LogLevel } from '@shellicar/core-di';
+
+class CustomLogger extends ILogger {
+  public override debug(message?: any, ...optionalParams: any[]): void {
+    // custom implementation  
+  }
+}
+// Override default logger
+const services1 = createServiceCollection({ logger: new CustomLogger() });
+// Override default log level
+const services2 = createServiceCollection({ logLevel: LogLevel.Debug });
+```
+* Service modules
+```ts
+class IAbstract {}
+class Concrete extends IAbstract {}
+
+class MyModule implements IServiceModule {
+  public registerServices(services: IServiceCollection): void {
+    services.register(IAbstract).to(Concrete);
+  }
+}
+
+const services = createServiceCollection();
+services.registerModules([MyModule]);
+const provider = services.buildProvider();
+const svc = provider.resolve(IAbstract);
+```
 
 ## Usage
 
 Check the test files for different usage scenarios.
 
 ```ts
-import { dependsOn, createServiceCollection, enable } from '@shellicar/core-di';
+import { dependsOn, createServiceCollection, IServiceModule, type IServiceCollection } from '@shellicar/core-di';
 
 // Define the dependency interface
 abstract class IClock {
@@ -107,10 +137,16 @@ class DatePrinter implements IDatePrinter {
   }  
 }
 
+class TimeModule extends IServiceModule {
+  public registerServices(services: IServiceCollection): void {
+    services.register(IClock).to(DefaultClock).singleton();
+    services.register(IDatePrinter).to(DatePrinter).scoped();
+  }
+}
+
 // Register and build provider
 const services = createServiceCollection();
-services.register(IClock).to(DefaultClock).singleton();
-services.register(IDatePrinter).to(DatePrinter).scoped();
+services.registerModules([TimeModule]);
 const sp = services.buildProvider();
 
 // Optionally create a scope

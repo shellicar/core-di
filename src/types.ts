@@ -1,5 +1,8 @@
 import type { Lifetime } from './constants';
 import type { IServiceModule, IServiceProvider, IServiceScope } from './interfaces';
+import type { ILogger } from './logger';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import type { ConsoleLogger } from './consoleLogger';
 
 export type SourceType = object;
 
@@ -24,11 +27,6 @@ export type ServiceDescriptorConcrete<T extends SourceType> = {
 };
 
 export type ServiceDescriptor<T extends SourceType> = ServiceDescriptorConcrete<T> | ServiceDescriptorFactory<T>;
-// export type ServiceDescriptor<T extends SourceType> = {
-//   implementation: ServiceImplementation<T>;
-//   factory?: InstanceFactory<T>;
-//   lifetime: Lifetime;
-// };
 
 export type LifetimeBuilder = {
   singleton: () => LifetimeBuilder;
@@ -50,10 +48,44 @@ export const ResolveMultipleMode = {
 } as const;
 export type ResolveMultipleMode = (typeof ResolveMultipleMode)[keyof typeof ResolveMultipleMode];
 
+export const enum LogLevel {
+  Debug = 0,
+  Info = 1,
+  Warn = 2,
+  Error = 3,
+  None = 4,
+}
+
+// export const LogLevel = {
+//   Debug: 0,
+//   Info: 1,
+//   Warn: 2,
+//   Error: 3,
+//   None: 4,
+// } as const;
+// export type LogLevel = (typeof LogLevel)[keyof typeof LogLevel];
+
+
 export const DefaultServiceCollectionOptions: ServiceCollectionOptions = {
   registrationMode: ResolveMultipleMode.Error,
+  logLevel: LogLevel.Warn,
 };
 
 export type ServiceCollectionOptions = {
+  /**
+   * Whether calling `resolve` when there are multiple registrations
+   * will result in an error or resolve the last registered service.
+   * @default ResolveMultipleMode.Error
+   */
   registrationMode: ResolveMultipleMode;
+  /**
+   * The default log level for the console logger.
+   * @defaultValue {@link LogLevel.Warn}
+   */
+  logLevel: LogLevel;
+  /**
+   * Custom implementation for logger. Ignores log level.
+   * @defaultValue {@link ConsoleLogger}
+   */
+  logger?: ILogger;
 };

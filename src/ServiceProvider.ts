@@ -1,4 +1,4 @@
-import { log } from './debug';
+import type { ILogger } from './logger';
 import { DesignDependenciesKey, Lifetime } from './constants';
 import type { IDisposable, IServiceCollection} from './interfaces';
 import { IServiceScope, IServiceProvider} from './interfaces';
@@ -18,8 +18,9 @@ export class ServiceProvider implements IServiceProvider, IServiceScope {
   private created: IDisposable[] = [];
 
   constructor(
-    private services: IServiceCollection,
-    private singletons = createResolveMap(),
+    private readonly logger: ILogger,
+    private readonly services: IServiceCollection,
+    private readonly singletons = createResolveMap(),
   ) {}
   
   public get Services(): IServiceCollection {
@@ -109,18 +110,25 @@ export class ServiceProvider implements IServiceProvider, IServiceScope {
       const createScope = this.createScope.bind(this);
 
       // proxy requests to keep current resolved types
-      instance = factory({
-        resolve,
-        resolveAll,
-        createScope,
-        get Services() { return this.Services; },
-      });
+      try {
+        instance = factory({
+          resolve,
+          resolveAll,
+          createScope,
+          get Services() { return this.Services; },
+        });
+      }
+      catch (err) {
+        this.logger.error(err);
+        throw new ServiceCreationError(descriptor.implementation, err);
+      }
     }
     else {
       try {
         instance = new descriptor.implementation();
       }
       catch (err) {
+        this.logger.error(err);
         throw new ServiceCreationError(descriptor.implementation, err);
       }
     }
@@ -131,7 +139,7 @@ export class ServiceProvider implements IServiceProvider, IServiceScope {
   }
 
   public createScope(): IServiceProvider & IDisposable {
-    return new ServiceProvider(this.services.clone(), this.singletons);
+    return new ServiceProvider(this.logger, this.services.clone(), this.singletons);
   }
 
   private setDependencies<T extends SourceType>(
@@ -140,10 +148,10 @@ export class ServiceProvider implements IServiceProvider, IServiceScope {
     currentResolve: ResolveMap<T>,
   ): T {
     const dependencies = getMetadata<T>(DesignDependenciesKey, type) ?? {};
-    log('Dependencies', type.name, dependencies);
+    this.logger.debug('Dependencies', type.name, dependencies);
     for (const [key, identifier] of Object.entries(dependencies)) {
       if (identifier !== type) {
-        log('Resolving', identifier, 'for', type.name);
+        this.logger.debug('Resolving', identifier, 'for', type.name);
         const dep = this.resolve(identifier, currentResolve);
         (instance as Record<string, unknown>)[key] = dep;
       } else {

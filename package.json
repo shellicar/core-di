@@ -1,6 +1,6 @@
 {
   "name": "@shellicar/core-di",
-  "version": "0.0.4",
+  "version": "0.1.0",
   "description": "A basic dependency injection library",
   "repository": {
     "type": "git",
@@ -10,14 +10,14 @@
   "packageManager": "pnpm@9.10.0",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
-  "types": "./dist/index.d.cts",
+  "types": "./dist/index.d.ts",
   "exports": {
     "require": {
-      "types": "./dist/index.d.cts",
+      "types": "./dist/index.d.ts",
       "default": "./dist/index.cjs"
     },
     "import": {
-      "types": "./dist/index.d.mts",
+      "types": "./dist/index.d.ts",
       "default": "./dist/index.mjs"
     }
   },
@@ -25,12 +25,12 @@
     "dist"
   ],
   "scripts": {
-    "clean": "rimraf dist",
-    "build": "pkgroll --minify --sourcemap --clean-dist",
-    "check": "tsc --noEmit --composite false --skipLibCheck",
+    "build": "run-s build:source build:types",
+    "build:source": "tsup",
+    "build:types": "tsup --dts-only --format mjs",
     "test": "mocha",
     "lint": "eslint .",
-    "prepublishOnly": "run-s clean build"
+    "prepublishOnly": "run-s build"
   },
   "keywords": [
     "dependency injection",
@@ -48,18 +48,19 @@
     "@stylistic/eslint-plugin": "^2.8.0",
     "@types/mocha": "^10.0.8",
     "@types/node": "^22.5.5",
-    "@typescript-eslint/parser": "^8.5.0",
-    "eslint": "^9.10.0",
+    "@typescript-eslint/parser": "^8.6.0",
+    "eslint": "^9.11.0",
     "eslint-plugin-prefer-arrow-functions": "^3.4.1",
     "eslint-plugin-turbo": "^2.1.2",
     "eslint-plugin-unicorn": "^55.0.0",
     "mocha": "^10.7.3",
     "npm-run-all2": "^6.2.3",
-    "pkgroll": "^2.5.0",
     "rimraf": "^6.0.1",
+    "terser": "^5.33.0",
+    "tsup": "^8.3.0",
     "tsx": "^4.19.1",
     "typescript": "^5.6.2",
-    "typescript-eslint": "^8.5.0"
+    "typescript-eslint": "^8.6.0"
   },
   "dependencies": {
     "@abraham/reflection": "^0.12.0"

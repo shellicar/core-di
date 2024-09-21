@@ -1,3 +1,4 @@
+import { ConsoleLogger } from './consoleLogger';
 import type { IServiceCollection } from './interfaces';
 import { ServiceCollection } from './ServiceCollection';
 import type { ServiceCollectionOptions } from './types';
@@ -8,4 +9,13 @@ const mergeOptions = (options: Partial<ServiceCollectionOptions> | undefined): S
   ...options,
 });
 
-export const createServiceCollection = (options?: Partial<ServiceCollectionOptions>): IServiceCollection => new ServiceCollection(mergeOptions(options)) as IServiceCollection;
+/**
+ * Creates a service collection with the (optionally) provided options
+ * @param options - Optional configuration for the service collection.
+ * @defaultValue Default options are taken from {@link DefaultServiceCollectionOptions}.
+ */
+export const createServiceCollection = (options?: Partial<ServiceCollectionOptions>): IServiceCollection => { 
+  const mergedOptions = mergeOptions(options);
+  const logger = mergedOptions.logger ?? new ConsoleLogger(mergedOptions);
+  return new ServiceCollection(logger, mergedOptions);
+};
