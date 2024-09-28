@@ -1,6 +1,8 @@
 import { createServiceCollection } from '../src';
 
-abstract class IAbstract { abstract method(): void; }
+abstract class IAbstract {
+  abstract method(): void;
+}
 abstract class Concrete {}
 
 const services = createServiceCollection();

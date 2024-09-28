@@ -1,8 +1,7 @@
+import type { ConsoleLogger } from './consoleLogger';
 import type { Lifetime } from './constants';
 import type { IServiceModule, IServiceProvider, IServiceScope } from './interfaces';
 import type { ILogger } from './logger';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import type { ConsoleLogger } from './consoleLogger';
 
 export type SourceType = object;
 
@@ -48,7 +47,7 @@ export const ResolveMultipleMode = {
 } as const;
 export type ResolveMultipleMode = (typeof ResolveMultipleMode)[keyof typeof ResolveMultipleMode];
 
-export const enum LogLevel {
+export enum LogLevel {
   Debug = 0,
   Info = 1,
   Warn = 2,
@@ -64,7 +63,6 @@ export const enum LogLevel {
 //   None: 4,
 // } as const;
 // export type LogLevel = (typeof LogLevel)[keyof typeof LogLevel];
-
 
 export const DefaultServiceCollectionOptions: ServiceCollectionOptions = {
   registrationMode: ResolveMultipleMode.Error,

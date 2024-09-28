@@ -1,4 +1,4 @@
-import { throws, equal } from 'node:assert/strict';
+import { equal, throws } from 'node:assert/strict';
 import { describe, it } from 'mocha';
 import { createServiceCollection } from '../src';
 import { UnregisteredServiceError } from '../src/errors';
@@ -25,6 +25,8 @@ describe('Registration inside scope', () => {
   it('does not affect parent registrations', () => {
     scoped.Services.register(IContext).to(Context, () => new Context('Mr Magoo'));
 
-    throws(() => { provider.resolve(IContext); }, UnregisteredServiceError);
+    throws(() => {
+      provider.resolve(IContext);
+    }, UnregisteredServiceError);
   });
 });

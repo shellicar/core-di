@@ -1,5 +1,5 @@
 import { ok } from 'node:assert/strict';
-import { createServiceCollection, type IServiceCollection, type IServiceModule } from '../src';
+import { type IServiceCollection, type IServiceModule, createServiceCollection } from '../src';
 
 class IAbstract {}
 class Concrete extends IAbstract {}
@@ -13,7 +13,7 @@ class MyModule implements IServiceModule {
 describe('Service modules', () => {
   it('Can use module', () => {
     const services = createServiceCollection();
-    services.registerModules([MyModule]);
+    services.registerModules(MyModule);
     const provider = services.buildProvider();
     const svc = provider.resolve(IAbstract);
     ok(svc instanceof Concrete);

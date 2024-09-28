@@ -1,6 +1,6 @@
 import { equal, notEqual } from 'node:assert/strict';
 import { describe, it } from 'mocha';
-import { dependsOn, createServiceCollection } from '../src';
+import { createServiceCollection, dependsOn } from '../src';
 
 abstract class IBottom {}
 abstract class IMiddle {

@@ -1,5 +1,5 @@
 import { equal } from 'node:assert/strict';
-import { createServiceCollection, dependsOn, IServiceScope } from '../src';
+import { IServiceScope, createServiceCollection, dependsOn } from '../src';
 
 abstract class ICheckHealth {
   abstract check(): Promise<boolean>;
@@ -7,17 +7,20 @@ abstract class ICheckHealth {
 
 class HealthCheck1 implements ICheckHealth {
   #checked = false;
-  public get checked() { return this.#checked; }
+  public get checked() {
+    return this.#checked;
+  }
 
   check(): Promise<boolean> {
     this.#checked = true;
     return Promise.resolve(true);
   }
-
 }
 class HealthCheck2 implements ICheckHealth {
   #checked = false;
-  public get checked() { return this.#checked; }
+  public get checked() {
+    return this.#checked;
+  }
   check(): Promise<boolean> {
     this.#checked = true;
     return Promise.resolve(true);
@@ -29,10 +32,10 @@ class CheckAllHealth {
 
   async health() {
     const all = this.scope.resolveAll(ICheckHealth);
-    const promises = all.map(x => x.check());
+    const promises = all.map((x) => x.check());
     const results = await Promise.all(promises);
     return {
-      healthy: results.every(x => x),
+      healthy: results.every((x) => x),
       count: all.length,
     };
   }
@@ -63,8 +66,8 @@ describe('Multiple implementations', () => {
 
   it('resolves both', async () => {
     const health = scoped.resolveAll(ICheckHealth);
-    const h1 = (health[0]) as HealthCheck1;
-    const h2 = (health[0]) as HealthCheck2;
+    const h1 = health[0] as HealthCheck1;
+    const h2 = health[0] as HealthCheck2;
     equal(true, h1.checked);
     equal(true, h2.checked);
   });

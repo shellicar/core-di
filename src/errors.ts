@@ -1,10 +1,6 @@
 import type { ServiceIdentifier } from './types';
 
-export abstract class ServiceError extends Error {
-  constructor(message: string) {
-    super(message);
-  }
-}
+export abstract class ServiceError extends Error {}
 
 export class UnregisteredServiceError<T extends object> extends ServiceError {
   name = 'UnregisteredServiceError';
@@ -24,7 +20,10 @@ export class MultipleRegistrationError<T extends object> extends ServiceError {
 
 export class ServiceCreationError<T extends object> extends ServiceError {
   name = 'ServiceCreationError';
-  constructor(identifier: ServiceIdentifier<T>, public readonly innerError: any) {
+  constructor(
+    identifier: ServiceIdentifier<T>,
+    public readonly innerError: any,
+  ) {
     super(`Error creating service: ${identifier}`);
     Object.setPrototypeOf(this, new.target.prototype);
   }

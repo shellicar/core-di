@@ -1,9 +1,9 @@
-import { createServiceCollection } from '../src';
+import { fail } from 'node:assert';
 import { throws } from 'node:assert/strict';
+import { ok } from 'node:assert/strict';
+import { createServiceCollection } from '../src';
 import { MultipleRegistrationError, ServiceError, UnregisteredServiceError } from '../src/errors';
 import { ResolveMultipleMode } from '../src/types';
-import { ok } from 'node:assert/strict';
-import { fail } from 'node:assert';
 
 abstract class IService {}
 class Service implements IService {}
@@ -38,8 +38,7 @@ describe('Catch errors', () => {
   try {
     provider.resolve(IService);
     fail('no error');
-  }
-  catch (err) {
+  } catch (err) {
     ok(err instanceof ServiceError);
   }
 });

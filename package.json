@@ -1,6 +1,6 @@
 {
   "name": "@shellicar/core-di",
-  "version": "0.1.1",
+  "version": "1.0.0",
   "description": "A basic dependency injection library",
   "repository": {
     "type": "git",
@@ -8,37 +8,32 @@
   },
   "private": false,
   "packageManager": "pnpm@9.11.0",
-  "main": "./dist/index.cjs",
+  "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "exports": {
-    "require": {
-      "types": "./dist/index.d.ts",
-      "default": "./dist/index.cjs"
-    },
-    "import": {
-      "types": "./dist/index.d.ts",
-      "default": "./dist/index.mjs"
+    ".": {
+      "require": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.mjs"
+      }
     }
   },
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "scripts": {
-    "build": "run-s build:source build:types",
-    "build:source": "tsup",
-    "build:types": "tsup --dts-only --format mjs",
+    "build": "tsup-node",
     "test": "mocha",
-    "lint": "eslint .",
-    "prepublishOnly": "build",
+    "lint": "pnpx @biomejs/biome lint",
+    "format": "pnpx @biomejs/biome format",
+    "check": "pnpx @biomejs/biome check",
+    "prepublishOnly": "run-p build check",
     "postpublish": "pnpm version --no-git-tag-version patch"
   },
-  "keywords": [
-    "dependency injection",
-    "di",
-    "inversion of control container",
-    "ioc"
-  ],
+  "keywords": ["dependency injection", "di", "inversion of control container", "ioc"],
   "author": "Stephen Hellicar",
   "license": "MIT",
   "bugs": {
@@ -46,22 +41,17 @@
   },
   "homepage": "https://github.com/shellicar/core-di#readme",
   "devDependencies": {
-    "@stylistic/eslint-plugin": "^2.8.0",
+    "@biomejs/biome": "^1.9.2",
     "@types/mocha": "^10.0.8",
     "@types/node": "^22.5.5",
-    "@typescript-eslint/parser": "^8.6.0",
-    "eslint": "^9.11.0",
-    "eslint-plugin-prefer-arrow-functions": "^3.4.1",
-    "eslint-plugin-turbo": "^2.1.2",
-    "eslint-plugin-unicorn": "^55.0.0",
     "mocha": "^10.7.3",
     "npm-run-all2": "^6.2.3",
+    "pkgroll": "^2.5.0",
     "rimraf": "^6.0.1",
     "terser": "^5.33.0",
     "tsup": "^8.3.0",
     "tsx": "^4.19.1",
-    "typescript": "^5.6.2",
-    "typescript-eslint": "^8.6.0"
+    "typescript": "^5.6.2"
   },
   "dependencies": {
     "@abraham/reflection": "^0.12.0"

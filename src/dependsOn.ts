@@ -1,6 +1,6 @@
 import { DesignDependenciesKey } from './constants';
-import type { ServiceIdentifier, SourceType } from './types';
 import { defineMetadata, getMetadata } from './metadata';
+import type { ServiceIdentifier, SourceType } from './types';
 
 const tagProperty = <T extends SourceType>(metadataKey: string, annotationTarget: object, name: string | symbol, identifier: ServiceIdentifier<T>) => {
   let existing = getMetadata<T>(metadataKey, annotationTarget);

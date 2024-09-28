@@ -27,7 +27,7 @@ describe('Can register abstract with factory', () => {
 
   const services = createServiceCollection();
   services.register(ITimeProvider).to(FakeTimeProvider);
-  services.register(IClock).to(Clock, x => {
+  services.register(IClock).to(Clock, (x) => {
     created = true;
     const provider = x.resolve(ITimeProvider);
     return new Clock(provider);
@@ -46,4 +46,3 @@ describe('Can register abstract with factory', () => {
     equal('2024-12-30T01:02:03.456Z', clock.isoString());
   });
 });
-

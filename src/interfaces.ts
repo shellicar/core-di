@@ -1,6 +1,6 @@
-import type { SourceType, ServiceBuilder, ServiceDescriptor, ServiceIdentifier, ServiceModuleType, ServiceCollectionOptions } from './types';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import type { MultipleRegistrationError } from './errors';
+import type { ServiceBuilder, ServiceCollectionOptions, ServiceDescriptor, ServiceIdentifier, ServiceModuleType, SourceType } from './types';
 
 export abstract class IDisposable {
   public abstract [Symbol.dispose]: () => void;
@@ -32,7 +32,7 @@ export abstract class IServiceCollection {
   public abstract readonly options: ServiceCollectionOptions;
   public abstract get<T extends SourceType>(key: ServiceIdentifier<T>): ServiceDescriptor<T>[];
   public abstract register<T extends SourceType>(identifier: ServiceIdentifier<T>): ServiceBuilder<T>;
-  public abstract registerModules(modules: ServiceModuleType[]): void;
+  public abstract registerModules(...modules: ServiceModuleType[]): void;
   public abstract buildProvider(): IServiceProvider;
   public abstract clone(): IServiceCollection;
 }

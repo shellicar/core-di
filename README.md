@@ -99,7 +99,7 @@ class MyModule implements IServiceModule {
 }
 
 const services = createServiceCollection();
-services.registerModules([MyModule]);
+services.registerModules(MyModule);
 const provider = services.buildProvider();
 const svc = provider.resolve(IAbstract);
 ```

@@ -1,18 +1,21 @@
 import { ServiceProvider } from './ServiceProvider';
-import type { SourceType, InstanceFactory, ServiceBuilder, ServiceDescriptor, ServiceIdentifier, ServiceImplementation, Newable, ServiceCollectionOptions } from './types';
-import type { IServiceCollection, IServiceModule, IServiceProvider } from './interfaces';
 import { Lifetime } from './constants';
+import type { IServiceCollection, IServiceProvider } from './interfaces';
 import type { ILogger } from './logger';
+import type { InstanceFactory, ServiceBuilder, ServiceCollectionOptions, ServiceDescriptor, ServiceIdentifier, ServiceImplementation, ServiceModuleType, SourceType } from './types';
 
 export class ServiceCollection implements IServiceCollection {
-  constructor(private readonly logger: ILogger, public readonly options: ServiceCollectionOptions, private readonly services = new Map<ServiceIdentifier<any>, ServiceDescriptor<any>[]>()) {
-  }
-  
-  public registerModules(modules: Newable<IServiceModule>[]): void {
-    modules.forEach(x => {
+  constructor(
+    private readonly logger: ILogger,
+    public readonly options: ServiceCollectionOptions,
+    private readonly services = new Map<ServiceIdentifier<any>, ServiceDescriptor<any>[]>(),
+  ) {}
+
+  public registerModules(...modules: ServiceModuleType[]): void {
+    for (const x of modules) {
       const module = new x();
       module.registerServices(this);
-    });
+    }
   }
 
   get<T extends SourceType>(key: ServiceIdentifier<T>): ServiceDescriptor<T>[] {
@@ -23,12 +26,21 @@ export class ServiceCollection implements IServiceCollection {
     return {
       // to: (implementation: ServiceImplementation<T>, func?: InstanceFactory<T>) => {
       to: (implementation: ServiceImplementation<T> | ServiceIdentifier<T>, factory?: InstanceFactory<T>) => {
-        const descriptor: ServiceDescriptor<T>= (factory === undefined) ? { implementation: implementation as ServiceImplementation<T>, lifetime: Lifetime.Resolve } : { implementation, factory, lifetime: Lifetime.Resolve };
+        const descriptor: ServiceDescriptor<T> = factory === undefined ? { implementation: implementation as ServiceImplementation<T>, lifetime: Lifetime.Resolve } : { implementation, factory, lifetime: Lifetime.Resolve };
         this.addService(identifier, descriptor);
         const builder = {
-          singleton: () => { descriptor.lifetime = Lifetime.Singleton; return builder; },
-          scoped: () => { descriptor.lifetime = Lifetime.Scoped; return builder; },
-          transient: () => { descriptor.lifetime = Lifetime.Transient; return builder; },
+          singleton: () => {
+            descriptor.lifetime = Lifetime.Singleton;
+            return builder;
+          },
+          scoped: () => {
+            descriptor.lifetime = Lifetime.Scoped;
+            return builder;
+          },
+          transient: () => {
+            descriptor.lifetime = Lifetime.Transient;
+            return builder;
+          },
         };
         return builder;
       },
@@ -48,7 +60,7 @@ export class ServiceCollection implements IServiceCollection {
   public clone(): IServiceCollection {
     const clonedMap = new Map<ServiceIdentifier<any>, ServiceDescriptor<any>[]>();
     for (const [key, descriptors] of this.services) {
-      const clonedDescriptors = descriptors.map(descriptor => ({ ...descriptor }));
+      const clonedDescriptors = descriptors.map((descriptor) => ({ ...descriptor }));
       clonedMap.set(key, clonedDescriptors);
     }
 
@@ -56,7 +68,7 @@ export class ServiceCollection implements IServiceCollection {
   }
 
   public buildProvider(): IServiceProvider {
-    const cloned = this.clone(); 
+    const cloned = this.clone();
     return new ServiceProvider(this.logger, cloned);
   }
 }

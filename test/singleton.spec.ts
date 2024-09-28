@@ -1,6 +1,6 @@
 import { equal, ok } from 'node:assert/strict';
 import { describe, it } from 'mocha';
-import { createServiceCollection, type IDisposable } from '../src';
+import { type IDisposable, createServiceCollection } from '../src';
 
 abstract class IAbstract {
   abstract get disposed(): boolean;

@@ -2,7 +2,9 @@ import { ILogger } from './logger';
 import { LogLevel, type ServiceCollectionOptions } from './types';
 
 export class ConsoleLogger extends ILogger {
-  constructor(private readonly options: ServiceCollectionOptions) { super(); }
+  constructor(private readonly options: ServiceCollectionOptions) {
+    super();
+  }
 
   public override debug(message?: any, ...optionalParams: any[]): void {
     if (this.options.logLevel <= LogLevel.Debug) {

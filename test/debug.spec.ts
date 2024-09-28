@@ -1,6 +1,6 @@
 import { equal, throws } from 'node:assert/strict';
 import { describe, it } from 'mocha';
-import { createServiceCollection, type ILogger } from '../src';
+import { type ILogger, createServiceCollection } from '../src';
 
 abstract class IAbstract {}
 class Concrete implements IAbstract {}
@@ -31,7 +31,6 @@ class TestLogger implements ILogger {
 }
 
 describe('Debug registration', () => {
-
   it('Logs on registration', () => {
     const logger = new TestLogger();
     const services = createServiceCollection({

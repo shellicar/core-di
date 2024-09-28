@@ -1,5 +1,5 @@
-import { createServiceCollection, dependsOn } from '../src';
 import { equal } from 'node:assert/strict';
+import { createServiceCollection, dependsOn } from '../src';
 
 abstract class IDependency {
   public abstract check(): string;
@@ -19,7 +19,7 @@ class Service implements IService {
 
   handle(): string {
     return `got service: ${this.dependency.check()}`;
-  }  
+  }
 }
 
 describe('Standard dependencies', () => {

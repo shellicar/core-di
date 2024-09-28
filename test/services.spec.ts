@@ -7,7 +7,6 @@ abstract class IAbstract {}
 class Concrete implements IAbstract {}
 
 describe('Service collection', () => {
-
   it('Cloning services isolates changes', () => {
     const services = createServiceCollection();
     const builder = services.register(IAbstract).to(Concrete).transient();
