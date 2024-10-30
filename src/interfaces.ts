@@ -3,7 +3,7 @@ import type { MultipleRegistrationError } from './errors';
 import type { ServiceBuilder, ServiceCollectionOptions, ServiceDescriptor, ServiceIdentifier, ServiceModuleType, SourceType } from './types';
 
 export abstract class IDisposable {
-  public abstract [Symbol.dispose]: () => void;
+  public abstract [Symbol.dispose](): void;
 }
 
 export abstract class IServiceModule {
@@ -35,4 +35,5 @@ export abstract class IServiceCollection {
   public abstract registerModules(...modules: ServiceModuleType[]): void;
   public abstract buildProvider(): IServiceProvider;
   public abstract clone(): IServiceCollection;
+  public abstract clone(scoped: true): IServiceCollection;
 }

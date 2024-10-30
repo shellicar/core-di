@@ -1,5 +1,6 @@
 import { ServiceProvider } from './ServiceProvider';
 import { Lifetime } from './constants';
+import { ScopedSingletonRegistrationError } from './errors';
 import type { IServiceCollection, IServiceProvider } from './interfaces';
 import type { ILogger } from './logger';
 import type { InstanceFactory, ServiceBuilder, ServiceCollectionOptions, ServiceDescriptor, ServiceIdentifier, ServiceImplementation, ServiceModuleType, SourceType } from './types';
@@ -8,6 +9,7 @@ export class ServiceCollection implements IServiceCollection {
   constructor(
     private readonly logger: ILogger,
     public readonly options: ServiceCollectionOptions,
+    private readonly isScoped: boolean,
     private readonly services = new Map<ServiceIdentifier<any>, ServiceDescriptor<any>[]>(),
   ) {}
 
@@ -30,6 +32,9 @@ export class ServiceCollection implements IServiceCollection {
         this.addService(identifier, descriptor);
         const builder = {
           singleton: () => {
+            if (this.isScoped) {
+              throw new ScopedSingletonRegistrationError();
+            }
             descriptor.lifetime = Lifetime.Singleton;
             return builder;
           },
@@ -57,14 +62,16 @@ export class ServiceCollection implements IServiceCollection {
     existing.push(descriptor);
   }
 
-  public clone(): IServiceCollection {
+  public clone(): IServiceCollection;
+  public clone(scoped: true): IServiceCollection;
+  public clone(scoped?: unknown): IServiceCollection {
     const clonedMap = new Map<ServiceIdentifier<any>, ServiceDescriptor<any>[]>();
     for (const [key, descriptors] of this.services) {
       const clonedDescriptors = descriptors.map((descriptor) => ({ ...descriptor }));
       clonedMap.set(key, clonedDescriptors);
     }
 
-    return new ServiceCollection(this.logger, this.options, clonedMap);
+    return new ServiceCollection(this.logger, this.options, scoped === true, clonedMap);
   }
 
   public buildProvider(): IServiceProvider {

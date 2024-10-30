@@ -125,7 +125,7 @@ export class ServiceProvider implements IServiceProvider, IServiceScope {
   }
 
   public createScope(): IServiceProvider & IDisposable {
-    return new ServiceProvider(this.logger, this.services.clone(), this.singletons);
+    return new ServiceProvider(this.logger, this.services.clone(true), this.singletons);
   }
 
   private setDependencies<T extends SourceType>(type: Id<T>, instance: T, currentResolve: ResolveMap<T>): T {

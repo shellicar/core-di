@@ -26,11 +26,13 @@
   "files": ["dist"],
   "scripts": {
     "build": "tsup-node",
+    "ci:fix": "biome check --fix --diagnostic-level=error",
     "test": "mocha",
-    "lint": "pnpx @biomejs/biome lint",
-    "format": "pnpx @biomejs/biome format",
-    "check": "pnpx @biomejs/biome check",
-    "prepublishOnly": "run-p build check",
+    "lint": "biome lint",
+    "format": "biome format",
+    "check": "biome check",
+    "ci": "biome ci",
+    "prepublishOnly": "run-p build ci",
     "postpublish": "pnpm version --no-git-tag-version patch"
   },
   "keywords": ["dependency injection", "di", "inversion of control container", "ioc"],
@@ -41,17 +43,16 @@
   },
   "homepage": "https://github.com/shellicar/core-di#readme",
   "devDependencies": {
-    "@biomejs/biome": "^1.9.2",
-    "@types/mocha": "^10.0.8",
-    "@types/node": "^22.5.5",
-    "mocha": "^10.7.3",
-    "npm-run-all2": "^6.2.3",
-    "pkgroll": "^2.5.0",
+    "@biomejs/biome": "^1.9.4",
+    "@types/mocha": "^10.0.9",
+    "@types/node": "^22.8.4",
+    "mocha": "^10.8.1",
+    "npm-run-all2": "^7.0.1",
     "rimraf": "^6.0.1",
-    "terser": "^5.33.0",
-    "tsup": "^8.3.0",
-    "tsx": "^4.19.1",
-    "typescript": "^5.6.2"
+    "terser": "^5.36.0",
+    "tsup": "^8.3.5",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3"
   },
   "dependencies": {
     "@abraham/reflection": "^0.12.0"

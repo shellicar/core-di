@@ -17,5 +17,5 @@ const mergeOptions = (options: Partial<ServiceCollectionOptions> | undefined): S
 export const createServiceCollection = (options?: Partial<ServiceCollectionOptions>): IServiceCollection => {
   const mergedOptions = mergeOptions(options);
   const logger = mergedOptions.logger ?? new ConsoleLogger(mergedOptions);
-  return new ServiceCollection(logger, mergedOptions);
+  return new ServiceCollection(logger, mergedOptions, false);
 };

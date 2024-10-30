@@ -2,7 +2,9 @@
 
 ## [1.0.0] - 2024-09-29
 
+### Fixed
 
+- Prevent registration of singletons in scoped provider.
 
 ## [0.1.0] - 2024-09-22
 
@@ -12,6 +14,7 @@
 - More tests and examples.
 
 ### Changed
+
 - Use `tsup` for build.
 
 ### Removed
@@ -45,6 +48,7 @@
 
 Initial release.
 
+[1.0.0]: https://github.com/shellicar/core-di/releases/tag/1.0.0
 [0.1.0]: https://github.com/shellicar/core-di/releases/tag/0.1.0
 [0.0.4]: https://github.com/shellicar/core-di/releases/tag/0.0.4
 [0.0.3]: https://github.com/shellicar/core-di/releases/tag/0.0.3

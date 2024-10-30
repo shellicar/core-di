@@ -36,3 +36,11 @@ export class SelfDependencyError extends ServiceError {
     Object.setPrototypeOf(this, new.target.prototype);
   }
 }
+
+export class ScopedSingletonRegistrationError extends ServiceError {
+  name = 'ScopedSingletonRegistrationError';
+  constructor() {
+    super('Cannot register a singleton in a scoped service collection');
+    Object.setPrototypeOf(this, new.target.prototype);
+  }
+}
