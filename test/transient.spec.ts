@@ -1,5 +1,5 @@
 import { notEqual } from 'node:assert/strict';
-import { describe, it } from 'mocha';
+import { describe, it } from 'vitest';
 import { createServiceCollection } from '../src';
 
 abstract class IAbstract {}

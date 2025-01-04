@@ -15,6 +15,7 @@ With TypeScript 5.0 generally available with non-experimental decorators, most D
 My set of features is simple, based on my current usage
 
 * Type-safe registration.
+
 ```ts
 const services = createServiceCollection();
 abstract class IAbstract { abstract method(): void; }
@@ -22,13 +23,17 @@ abstract class Concrete {}
 services.register(IAbstract).to(Concrete);
 //                              ^ Error
 ```
+
 * Type-safe resolution.
+
 ```ts
 const provider = services.buildProvider();
 const svc = provider.resolve(IMyService);
 //    ^ IMyService
 ```
+
 * Provide factory methods for instantiating classes.
+
 ```ts
 services.register(Redis).to(Redis, x => {
   const options = x.resolve(IRedisOptions);
@@ -38,13 +43,16 @@ services.register(Redis).to(Redis, x => {
   });
 });
 ```
+
 * Use property injection with decorators for simple dependency definition.
+
 ```ts
 abstract class IDependency {}
 class Service implements IService {
   @dependsOn(IDependency) private readonly dependency!: IDependency;
 }
 ```
+
 * Provide multiple implementations for identifiers and provide a `resolveAll` method.
 * Define instance lifetime with simple builder pattern.
 
@@ -53,6 +61,7 @@ services.register(IAbstract).to(Concrete).singleton();
 ```
 
 * Create scopes to allow "per-request" lifetimes.
+
 ```ts
 const services = createServiceCollection();
 const provider = services.buildProvider();
@@ -60,11 +69,22 @@ using scope = provider.createScope();
 ```
 
 * Register classes during a scope
+
 ```ts
 using scope = provider.createScope();
 scope.Services.register(IContext).to(Context);
 ```
+
+* Multiple registrations
+
+```ts
+services.register(IAbstract1, IAbstract2).to(Concrete).singleton();
+const provider = services.buildProvider();
+provider.resolve(IAbstract1) === provider.resolve(IAbstract2);
+```
+
 * Override registrations (e.g.: for testing)
+
 ```ts
 import { ok } from 'node:assert/strict';
 const services = createServiceCollection({ registrationMode: ResolveMultipleMode.LastRegistered });
@@ -75,7 +95,19 @@ const provider = services.buildProvider();
 const options = provider.resolve(IOptions);
 ok(options instanceof MockOptions);
 ```
+
+* Override lifetimes (e.g.: for testing)
+
+```ts
+const services = createServiceCollection({ logLevel: LogLevel.Debug });
+services.register(IAbstract).to(Concrete).singleton();
+const provider = services.buildProvider();
+sp.Services.overrideLifetime(IAbstract, Lifetime.Transient);
+sp.resolve(IAbstract) !== sp.resolve(IAbstract);
+```
+
 * Logging options
+
 ```ts
 class CustomLogger extends ILogger {
   public override debug(message?: any, ...optionalParams: any[]): void {
@@ -87,7 +119,9 @@ const services1 = createServiceCollection({ logger: new CustomLogger() });
 // Override default log level
 const services2 = createServiceCollection({ logLevel: LogLevel.Debug });
 ```
+
 * Service modules
+
 ```ts
 class IAbstract {}
 class Concrete extends IAbstract {}

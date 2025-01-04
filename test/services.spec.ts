@@ -1,7 +1,7 @@
 import { equal, notEqual } from 'node:assert/strict';
-import { describe, it } from 'mocha';
+import { describe, it } from 'vitest';
 import { createServiceCollection } from '../src';
-import { Lifetime } from '../src/constants';
+import { Lifetime } from '../src/enums';
 
 abstract class IAbstract {}
 class Concrete implements IAbstract {}

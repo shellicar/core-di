@@ -1,5 +1,6 @@
-import { ILogger } from './logger';
-import { LogLevel, type ServiceCollectionOptions } from './types';
+import { LogLevel } from '../enums';
+import { ILogger } from '../logger';
+import type { ServiceCollectionOptions } from '../types';
 
 export class ConsoleLogger extends ILogger {
   constructor(private readonly options: ServiceCollectionOptions) {

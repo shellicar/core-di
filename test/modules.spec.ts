@@ -1,4 +1,5 @@
 import { ok } from 'node:assert/strict';
+import { describe, it } from 'vitest';
 import { type IServiceCollection, type IServiceModule, createServiceCollection } from '../src';
 
 class IAbstract {}

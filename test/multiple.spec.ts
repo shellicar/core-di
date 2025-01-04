@@ -1,5 +1,6 @@
 import { equal } from 'node:assert/strict';
-import { IServiceScope, createServiceCollection, dependsOn } from '../src';
+import { describe, it } from 'vitest';
+import { IScopedProvider, createServiceCollection, dependsOn } from '../src';
 
 abstract class ICheckHealth {
   abstract check(): Promise<boolean>;
@@ -28,7 +29,7 @@ class HealthCheck2 implements ICheckHealth {
 }
 
 class CheckAllHealth {
-  @dependsOn(IServiceScope) scope!: IServiceScope;
+  @dependsOn(IScopedProvider) scope!: IScopedProvider;
 
   async health() {
     const all = this.scope.resolveAll(ICheckHealth);
@@ -42,10 +43,12 @@ class CheckAllHealth {
 }
 
 describe('No implementations', () => {
-  const services = createServiceCollection();
-  const provider = services.buildProvider();
-  const result = provider.resolveAll(ICheckHealth);
-  equal(0, result.length);
+  it('doesnt throw', () => {
+    const services = createServiceCollection();
+    const provider = services.buildProvider();
+    const result = provider.resolveAll(ICheckHealth);
+    equal(0, result.length);
+  });
 });
 
 describe('Multiple implementations', () => {

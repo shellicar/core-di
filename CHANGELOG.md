@@ -1,5 +1,26 @@
 # Changelog
 
+## [2.0.0] - 2025-01-05
+
+### Breaking
+
+- Some exported types changed names/functionality:
+  - `LifetimeBuilder` -> `ILifetimeBuilder`
+  - `ServiceBuilder` -> `IServiceBuilder`
+  - `IServiceScope` -> `IResolutionScope` and `IScopedProvider`
+- No longer export `ServiceCollection` and `ServiceProvider`
+- Factory methods now take `IResolutionScope` instead of `IServiceScope & IServiceProvider`
+
+### Added
+
+- Extend `IServiceCollection.register` to accept multiple interfaces (ServiceIdentifiers).
+  - All interfaces will resolve to the same implementation (and hence, instance, respectful of lifetime)
+- Add `IServiceCollection.overrideLifetime` to allow overriding the lifetime of all service descriptors matching the service identifier (mainly for testing scenarios)
+
+### Dev
+
+- Switch to vitest ⚡ from mocha ☕.
+
 ## [1.0.0] - 2024-09-29
 
 ### Fixed
@@ -48,6 +69,7 @@
 
 Initial release.
 
+[1.1.0]: https://github.com/shellicar/core-di/releases/tag/1.1.0
 [1.0.0]: https://github.com/shellicar/core-di/releases/tag/1.0.0
 [0.1.0]: https://github.com/shellicar/core-di/releases/tag/0.1.0
 [0.0.4]: https://github.com/shellicar/core-di/releases/tag/0.0.4
