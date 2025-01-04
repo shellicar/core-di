@@ -1,5 +1,5 @@
-import { DesignDependenciesKey } from './private/constants';
 import { IResolutionScope, IScopedProvider, IServiceProvider } from './interfaces';
+import { DesignDependenciesKey } from './private/constants';
 import { defineMetadata, getMetadata } from './private/metadata';
 import type { ServiceIdentifier, SourceType } from './types';
 

@@ -1,7 +1,7 @@
-import type { ConsoleLogger } from './private/consoleLogger';
 import type { Lifetime, LogLevel, ResolveMultipleMode } from './enums';
 import type { IResolutionScope, IServiceModule } from './interfaces';
 import type { ILogger } from './logger';
+import type { ConsoleLogger } from './private/consoleLogger';
 
 export type SourceType = object;
 

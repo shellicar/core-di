@@ -21,22 +21,12 @@ export class ServiceBuilder<T extends SourceType> implements IServiceBuilder<T> 
   }
 
   private createDescriptor(factory: InstanceFactory<T> | undefined, implementation: ServiceImplementation<T>): ServiceDescriptor<T> {
-    const lifetime = Lifetime.Resolve;
-    if (factory !== undefined) {
-      return {
-        implementation,
-        createInstance(context) {
-          return factory(context);
-        },
-        lifetime,
-      };
-    }
+    const createInstance = factory ?? (() => new implementation());
+
     return {
       implementation,
-      createInstance(context) {
-        return new implementation(context);
-      },
-      lifetime,
+      createInstance,
+      lifetime: Lifetime.Resolve,
     };
   }
 

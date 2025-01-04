@@ -1,8 +1,8 @@
+import { DefaultServiceCollectionOptions } from './defaults';
+import type { IServiceCollection } from './interfaces';
 import { ServiceCollection } from './private/ServiceCollection';
 import { ConsoleLogger } from './private/consoleLogger';
-import type { IServiceCollection } from './interfaces';
 import type { ServiceCollectionOptions } from './types';
-import { DefaultServiceCollectionOptions } from './defaults';
 
 const mergeOptions = (options: Partial<ServiceCollectionOptions> | undefined): ServiceCollectionOptions => ({
   ...DefaultServiceCollectionOptions,

@@ -1,9 +1,9 @@
-import { ServiceBuilder } from './ServiceBuilder';
-import { ServiceProvider } from './ServiceProvider';
 import type { Lifetime } from '../enums';
 import type { IServiceCollection, IServiceProvider } from '../interfaces';
 import type { ILogger } from '../logger';
 import type { EnsureObject, IServiceBuilder, ServiceCollectionOptions, ServiceDescriptor, ServiceIdentifier, ServiceModuleType, SourceType, UnionToIntersection } from '../types';
+import { ServiceBuilder } from './ServiceBuilder';
+import { ServiceProvider } from './ServiceProvider';
 
 export class ServiceCollection implements IServiceCollection {
   constructor(

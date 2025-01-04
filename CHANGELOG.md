@@ -1,12 +1,21 @@
 # Changelog
 
-## [1.1.0] - 2025-01-05
+## [2.0.0] - 2025-01-05
+
+### Breaking
+
+- Some exported types changed names/functionality:
+  - `LifetimeBuilder` -> `ILifetimeBuilder`
+  - `ServiceBuilder` -> `IServiceBuilder`
+  - `IServiceScope` -> `IResolutionScope` and `IScopedProvider`
+- No longer export `ServiceCollection` and `ServiceProvider`
+- Factory methods now take `IResolutionScope` instead of `IServiceScope & IServiceProvider`
 
 ### Added
 
 - Extend `IServiceCollection.register` to accept multiple interfaces (ServiceIdentifiers).
-  - Resolving any of the interfaces will return the same implementation instance.
-- Add `IServiceCollection.overrideLifetime` to allow overriding the lifetime of all service descriptors matching the service identifier.
+  - Resolving any of the interfaces will return the same implementation instance
+- Add `IServiceCollection.overrideLifetime` to allow overriding the lifetime of all service descriptors matching the service identifier
 
 ### Dev
 
