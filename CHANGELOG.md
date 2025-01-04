@@ -14,8 +14,8 @@
 ### Added
 
 - Extend `IServiceCollection.register` to accept multiple interfaces (ServiceIdentifiers).
-  - Resolving any of the interfaces will return the same implementation instance
-- Add `IServiceCollection.overrideLifetime` to allow overriding the lifetime of all service descriptors matching the service identifier
+  - All interfaces will resolve to the same implementation (and hence, instance, respectful of lifetime)
+- Add `IServiceCollection.overrideLifetime` to allow overriding the lifetime of all service descriptors matching the service identifier (mainly for testing scenarios)
 
 ### Dev
 
