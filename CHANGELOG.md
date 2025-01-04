@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.1.0] - 2025-01-05
+
+### Added
+
+- Extend `IServiceCollection.register` to accept multiple interfaces (ServiceIdentifiers).
+  - Resolving any of the interfaces will return the same implementation instance.
+- Add `IServiceCollection.overrideLifetime` to allow overriding the lifetime of all service descriptors matching the service identifier.
+
+### Dev
+
+- Switch to vitest ⚡ from mocha ☕.
+
 ## [1.0.0] - 2024-09-29
 
 ### Fixed
@@ -48,6 +60,7 @@
 
 Initial release.
 
+[1.1.0]: https://github.com/shellicar/core-di/releases/tag/1.1.0
 [1.0.0]: https://github.com/shellicar/core-di/releases/tag/1.0.0
 [0.1.0]: https://github.com/shellicar/core-di/releases/tag/0.1.0
 [0.0.4]: https://github.com/shellicar/core-di/releases/tag/0.0.4

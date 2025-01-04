@@ -1,5 +1,5 @@
 import type { ConsoleLogger } from './consoleLogger';
-import type { Lifetime } from './constants';
+import { type Lifetime, LogLevel } from './enums';
 import type { IServiceModule, IServiceProvider, IServiceScope } from './interfaces';
 import type { ILogger } from './logger';
 
@@ -16,7 +16,7 @@ export type InstanceFactory<T extends SourceType> = (x: IServiceScope & IService
 export type ServiceModuleType = Newable<IServiceModule>;
 
 export type ServiceDescriptorFactory<T extends SourceType> = {
-  implementation: ServiceIdentifier<T>;
+  implementation: ServiceImplementation<T>;
   factory: InstanceFactory<T>;
   lifetime: Lifetime;
 };
@@ -35,7 +35,7 @@ export type LifetimeBuilder = {
 export type ServiceBuilder<T extends SourceType> = {
   to: {
     (implementation: ServiceImplementation<T>): LifetimeBuilder;
-    (implementation: ServiceIdentifier<T>, factory: InstanceFactory<T>): LifetimeBuilder;
+    (implementation: ServiceImplementation<T>, factory: InstanceFactory<T>): LifetimeBuilder;
   };
 };
 
@@ -46,14 +46,6 @@ export const ResolveMultipleMode = {
   LastRegistered: 'LAST_REGISTERED',
 } as const;
 export type ResolveMultipleMode = (typeof ResolveMultipleMode)[keyof typeof ResolveMultipleMode];
-
-export enum LogLevel {
-  Debug = 0,
-  Info = 1,
-  Warn = 2,
-  Error = 3,
-  None = 4,
-}
 
 // export const LogLevel = {
 //   Debug: 0,
@@ -87,3 +79,7 @@ export type ServiceCollectionOptions = {
    */
   logger?: ILogger;
 };
+
+export type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (k: infer I) => void ? I : never;
+
+export type EnsureObject<T> = T extends object ? T : never;

@@ -1,4 +1,5 @@
-import { DesignDependenciesKey, Lifetime } from './constants';
+import { DesignDependenciesKey } from './constants';
+import { Lifetime } from './enums';
 import { MultipleRegistrationError, SelfDependencyError, ServiceCreationError, UnregisteredServiceError } from './errors';
 import type { IDisposable, IServiceCollection } from './interfaces';
 import { IServiceProvider, IServiceScope } from './interfaces';
@@ -7,7 +8,7 @@ import { getMetadata } from './metadata';
 import type { ServiceDescriptor, ServiceIdentifier, ServiceImplementation, SourceType } from './types';
 import { ResolveMultipleMode } from './types';
 
-type Id<T extends SourceType> = ServiceIdentifier<T> | ServiceImplementation<T>;
+type Id<T extends SourceType> = ServiceImplementation<T>;
 
 type ResolveMap<T extends SourceType> = Map<ServiceIdentifier<T>, Map<Id<T>, T>>;
 
@@ -34,10 +35,10 @@ export class ServiceProvider implements IServiceProvider, IServiceScope {
   }
 
   private resolveFrom<T extends SourceType>(identifier: ServiceIdentifier<T>, descriptor: ServiceDescriptor<T>, lifetimeMap: ResolveMap<T>, currentResolve: ResolveMap<T>): T {
-    let resolvedInstances = lifetimeMap.get(identifier);
+    let resolvedInstances = lifetimeMap.get(descriptor.implementation);
     if (resolvedInstances === undefined) {
       resolvedInstances = new Map();
-      lifetimeMap.set(identifier, resolvedInstances);
+      lifetimeMap.set(descriptor.implementation, resolvedInstances);
     }
 
     let instance = resolvedInstances.get(descriptor.implementation);

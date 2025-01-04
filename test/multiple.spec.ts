@@ -1,4 +1,5 @@
 import { equal } from 'node:assert/strict';
+import { describe, it } from 'vitest';
 import { IServiceScope, createServiceCollection, dependsOn } from '../src';
 
 abstract class ICheckHealth {
@@ -42,10 +43,12 @@ class CheckAllHealth {
 }
 
 describe('No implementations', () => {
-  const services = createServiceCollection();
-  const provider = services.buildProvider();
-  const result = provider.resolveAll(ICheckHealth);
-  equal(0, result.length);
+  it('doesnt throw', () => {
+    const services = createServiceCollection();
+    const provider = services.buildProvider();
+    const result = provider.resolveAll(ICheckHealth);
+    equal(0, result.length);
+  });
 });
 
 describe('Multiple implementations', () => {

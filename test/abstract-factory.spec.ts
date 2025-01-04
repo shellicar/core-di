@@ -1,4 +1,5 @@
 import { equal, ok } from 'node:assert/strict';
+import { describe, it } from 'vitest';
 import { createServiceCollection } from '../src';
 
 abstract class IClock {

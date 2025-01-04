@@ -1,13 +1,13 @@
 {
   "name": "@shellicar/core-di",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A basic dependency injection library",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/shellicar/core-di.git"
   },
   "private": false,
-  "packageManager": "pnpm@9.11.0",
+  "packageManager": "pnpm@9.15.2+sha512.93e57b0126f0df74ce6bff29680394c0ba54ec47246b9cf321f0121d8d9bb03f750a705f24edc3c1180853afd7c2c3b94196d0a3d53d3e069d9e2793ef11f321",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -26,12 +26,14 @@
   "files": ["dist"],
   "scripts": {
     "build": "tsup-node",
-    "ci:fix": "biome check --fix --diagnostic-level=error",
-    "test": "mocha",
+    "dev": "tsup-node --watch",
+    "test": "vitest run",
     "lint": "biome lint",
     "format": "biome format",
     "check": "biome check",
     "ci": "biome ci",
+    "ci:fix": "biome check --fix --diagnostic-level=error",
+    "updates": "npm-check-updates",
     "prepublishOnly": "run-p build ci",
     "postpublish": "pnpm version --no-git-tag-version patch"
   },
@@ -44,15 +46,15 @@
   "homepage": "https://github.com/shellicar/core-di#readme",
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
-    "@types/mocha": "^10.0.9",
-    "@types/node": "^22.8.4",
-    "mocha": "^10.8.1",
-    "npm-run-all2": "^7.0.1",
+    "@types/node": "^22.10.5",
+    "npm-check-updates": "^17.1.13",
+    "npm-run-all2": "^7.0.2",
     "rimraf": "^6.0.1",
-    "terser": "^5.36.0",
+    "terser": "^5.37.0",
     "tsup": "^8.3.5",
     "tsx": "^4.19.2",
-    "typescript": "^5.6.3"
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
   },
   "dependencies": {
     "@abraham/reflection": "^0.12.0"

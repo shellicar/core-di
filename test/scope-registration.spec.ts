@@ -1,5 +1,5 @@
 import { equal, throws } from 'node:assert/strict';
-import { describe, it } from 'mocha';
+import { describe, it } from 'vitest';
 import { createServiceCollection } from '../src';
 import { UnregisteredServiceError } from '../src/errors';
 

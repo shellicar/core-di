@@ -2,8 +2,9 @@ import { defineConfig } from 'tsup';
 
 export default defineConfig((config) => ({
   entry: ['src/index.ts'],
-  splitting: !config.watch,
+  splitting: true,
   sourcemap: true,
+  treeshake: true,
   dts: true,
   clean: !config.watch,
   minify: config.watch ? false : 'terser',

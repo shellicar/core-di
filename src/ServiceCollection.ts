@@ -1,9 +1,9 @@
 import { ServiceProvider } from './ServiceProvider';
-import { Lifetime } from './constants';
+import { Lifetime } from './enums';
 import { ScopedSingletonRegistrationError } from './errors';
 import type { IServiceCollection, IServiceProvider } from './interfaces';
 import type { ILogger } from './logger';
-import type { InstanceFactory, ServiceBuilder, ServiceCollectionOptions, ServiceDescriptor, ServiceIdentifier, ServiceImplementation, ServiceModuleType, SourceType } from './types';
+import type { EnsureObject, InstanceFactory, ServiceBuilder, ServiceCollectionOptions, ServiceDescriptor, ServiceIdentifier, ServiceImplementation, ServiceModuleType, SourceType, UnionToIntersection } from './types';
 
 export class ServiceCollection implements IServiceCollection {
   constructor(
@@ -12,7 +12,6 @@ export class ServiceCollection implements IServiceCollection {
     private readonly isScoped: boolean,
     private readonly services = new Map<ServiceIdentifier<any>, ServiceDescriptor<any>[]>(),
   ) {}
-
   public registerModules(...modules: ServiceModuleType[]): void {
     for (const x of modules) {
       const module = new x();
@@ -24,12 +23,22 @@ export class ServiceCollection implements IServiceCollection {
     return this.services.get(key) ?? [];
   }
 
-  register<T extends SourceType>(identifier: ServiceIdentifier<T>): ServiceBuilder<T> {
+  public overrideLifetime<T extends SourceType>(identifier: ServiceIdentifier<T>, lifetime: Lifetime): void {
+    for (const x of this.get(identifier)) {
+      x.lifetime = lifetime;
+    }
+  }
+
+  register<Types extends SourceType[]>(...identifiers: { [K in keyof Types]: ServiceIdentifier<Types[K]> }): ServiceBuilder<EnsureObject<UnionToIntersection<Types[number]>>> {
     return {
-      // to: (implementation: ServiceImplementation<T>, func?: InstanceFactory<T>) => {
-      to: (implementation: ServiceImplementation<T> | ServiceIdentifier<T>, factory?: InstanceFactory<T>) => {
-        const descriptor: ServiceDescriptor<T> = factory === undefined ? { implementation: implementation as ServiceImplementation<T>, lifetime: Lifetime.Resolve } : { implementation, factory, lifetime: Lifetime.Resolve };
-        this.addService(identifier, descriptor);
+      to: (implementation: ServiceImplementation<any>, factory?: InstanceFactory<any>) => {
+        const descriptor: ServiceDescriptor<any> = factory === undefined ? { implementation: implementation as ServiceImplementation<any>, lifetime: Lifetime.Resolve } : { implementation, factory, lifetime: Lifetime.Resolve };
+
+        // Register the same descriptor for all interfaces
+        for (const identifier of identifiers) {
+          this.addService(identifier, descriptor);
+        }
+
         const builder = {
           singleton: () => {
             if (this.isScoped) {

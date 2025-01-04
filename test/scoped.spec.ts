@@ -1,6 +1,6 @@
 import { throws } from 'node:assert';
 import { equal, notEqual } from 'node:assert/strict';
-import { describe, it } from 'mocha';
+import { describe, it } from 'vitest';
 import { createServiceCollection } from '../src';
 import { ScopedSingletonRegistrationError } from '../src/errors';
 
