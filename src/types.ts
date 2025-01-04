@@ -1,5 +1,5 @@
-import type { ConsoleLogger } from './consoleLogger';
-import { type Lifetime, LogLevel, ResolveMultipleMode } from './enums';
+import type { ConsoleLogger } from './private/consoleLogger';
+import type { Lifetime, LogLevel, ResolveMultipleMode } from './enums';
 import type { IResolutionScope, IServiceModule } from './interfaces';
 import type { ILogger } from './logger';
 
@@ -22,17 +22,6 @@ export interface ServiceDescriptor<T extends SourceType> {
 }
 
 export type MetadataType<T extends SourceType> = Record<string | symbol, ServiceIdentifier<T>>;
-
-// export const ResolveMultipleMode = {
-//   Error: 'ERROR',
-//   LastRegistered: 'LAST_REGISTERED',
-// } as const;
-// export type ResolveMultipleMode = (typeof ResolveMultipleMode)[keyof typeof ResolveMultipleMode];
-
-export const DefaultServiceCollectionOptions: ServiceCollectionOptions = {
-  registrationMode: ResolveMultipleMode.Error,
-  logLevel: LogLevel.Warn,
-};
 
 export type ServiceCollectionOptions = {
   /**

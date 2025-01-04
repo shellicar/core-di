@@ -1,6 +1,6 @@
-import { Lifetime } from './enums';
-import { ScopedSingletonRegistrationError } from './errors';
-import type { ILifetimeBuilder, IServiceBuilder, InstanceFactory, ServiceDescriptor, ServiceIdentifier, ServiceImplementation, SourceType } from './types';
+import { Lifetime } from '../enums';
+import { ScopedSingletonRegistrationError } from '../errors';
+import type { ILifetimeBuilder, IServiceBuilder, InstanceFactory, ServiceDescriptor, ServiceIdentifier, ServiceImplementation, SourceType } from '../types';
 
 export class ServiceBuilder<T extends SourceType> implements IServiceBuilder<T> {
   private descriptor: ServiceDescriptor<T> | undefined;

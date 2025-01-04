@@ -1,5 +1,5 @@
-import { Lifetime } from './enums';
-import type { ServiceImplementation, SourceType } from './types';
+import { Lifetime } from '../enums';
+import type { ServiceImplementation, SourceType } from '../types';
 
 export class ResolutionContext {
   constructor(

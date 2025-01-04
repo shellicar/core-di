@@ -1,6 +1,6 @@
-import { DesignDependenciesKey } from './constants';
+import { DesignDependenciesKey } from './private/constants';
 import { IResolutionScope, IScopedProvider, IServiceProvider } from './interfaces';
-import { defineMetadata, getMetadata } from './metadata';
+import { defineMetadata, getMetadata } from './private/metadata';
 import type { ServiceIdentifier, SourceType } from './types';
 
 const tagProperty = <T extends SourceType>(metadataKey: string, annotationTarget: object, name: string | symbol, identifier: ServiceIdentifier<T>) => {

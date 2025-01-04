@@ -1,13 +1,13 @@
 import { ResolutionContext } from './ResolutionContext';
 import { DesignDependenciesKey } from './constants';
-import { Lifetime } from './enums';
-import { ResolveMultipleMode } from './enums';
-import { MultipleRegistrationError, SelfDependencyError, ServiceCreationError, UnregisteredServiceError } from './errors';
-import { type IDisposable, IResolutionScope, IScopedProvider, type IServiceCollection } from './interfaces';
-import { IServiceProvider } from './interfaces';
-import type { ILogger } from './logger';
+import { Lifetime } from '../enums';
+import { ResolveMultipleMode } from '../enums';
+import { MultipleRegistrationError, SelfDependencyError, ServiceCreationError, UnregisteredServiceError } from '../errors';
+import { type IDisposable, IResolutionScope, IScopedProvider, type IServiceCollection } from '../interfaces';
+import { IServiceProvider } from '../interfaces';
+import type { ILogger } from '../logger';
 import { getMetadata } from './metadata';
-import type { ServiceDescriptor, ServiceIdentifier, ServiceImplementation, SourceType } from './types';
+import type { ServiceDescriptor, ServiceIdentifier, ServiceImplementation, SourceType } from '../types';
 
 export class ServiceProvider implements IServiceProvider, IScopedProvider {
   private scoped = new Map<ServiceImplementation<any>, any>();
