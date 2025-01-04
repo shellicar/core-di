@@ -14,8 +14,8 @@ export abstract class IResolutionScope {
   /**
    * Resolves a single implementation for the given identifier.
    * @template T The type of service to resolve
-   * @param {ServiceIdentifier<T>} identifier The service identifier
-   * @returns {T} The resolved instance
+   * @param identifier The service identifier
+   * @returns The resolved instance
    * @throws {MultipleRegistrationError} When multiple implementations exist (unless {@link ServiceCollectionOptions.registrationMode} is set to {@link ResolveMultipleMode.LastRegistered}).
    * @throws {UnregisteredServiceError} When no implementation exists
    */
@@ -24,8 +24,8 @@ export abstract class IResolutionScope {
   /**
    * Resolves all implementations for the given identifier.
    * @template T The type of service to resolve
-   * @param {ServiceIdentifier<T>} identifier The service identifier
-   * @returns {T[]} Array of resolved instances
+   * @param identifier The service identifier
+   * @returns Array of resolved instances
    */
   public abstract resolveAll<T extends SourceType>(identifier: ServiceIdentifier<T>): T[];
 }
