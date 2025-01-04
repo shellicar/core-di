@@ -1,9 +1,9 @@
+import { ServiceBuilder } from './ServiceBuilder';
 import { ServiceProvider } from './ServiceProvider';
-import { Lifetime } from './enums';
-import { ScopedSingletonRegistrationError } from './errors';
+import type { Lifetime } from './enums';
 import type { IServiceCollection, IServiceProvider } from './interfaces';
 import type { ILogger } from './logger';
-import type { EnsureObject, InstanceFactory, ServiceBuilder, ServiceCollectionOptions, ServiceDescriptor, ServiceIdentifier, ServiceImplementation, ServiceModuleType, SourceType, UnionToIntersection } from './types';
+import type { EnsureObject, IServiceBuilder, ServiceCollectionOptions, ServiceDescriptor, ServiceIdentifier, ServiceModuleType, SourceType, UnionToIntersection } from './types';
 
 export class ServiceCollection implements IServiceCollection {
   constructor(
@@ -12,6 +12,7 @@ export class ServiceCollection implements IServiceCollection {
     private readonly isScoped: boolean,
     private readonly services = new Map<ServiceIdentifier<any>, ServiceDescriptor<any>[]>(),
   ) {}
+
   public registerModules(...modules: ServiceModuleType[]): void {
     for (const x of modules) {
       const module = new x();
@@ -24,45 +25,17 @@ export class ServiceCollection implements IServiceCollection {
   }
 
   public overrideLifetime<T extends SourceType>(identifier: ServiceIdentifier<T>, lifetime: Lifetime): void {
-    for (const x of this.get(identifier)) {
-      x.lifetime = lifetime;
+    for (const descriptor of this.get(identifier)) {
+      descriptor.lifetime = lifetime;
     }
   }
 
-  register<Types extends SourceType[]>(...identifiers: { [K in keyof Types]: ServiceIdentifier<Types[K]> }): ServiceBuilder<EnsureObject<UnionToIntersection<Types[number]>>> {
-    return {
-      to: (implementation: ServiceImplementation<any>, factory?: InstanceFactory<any>) => {
-        const descriptor: ServiceDescriptor<any> = factory === undefined ? { implementation: implementation as ServiceImplementation<any>, lifetime: Lifetime.Resolve } : { implementation, factory, lifetime: Lifetime.Resolve };
-
-        // Register the same descriptor for all interfaces
-        for (const identifier of identifiers) {
-          this.addService(identifier, descriptor);
-        }
-
-        const builder = {
-          singleton: () => {
-            if (this.isScoped) {
-              throw new ScopedSingletonRegistrationError();
-            }
-            descriptor.lifetime = Lifetime.Singleton;
-            return builder;
-          },
-          scoped: () => {
-            descriptor.lifetime = Lifetime.Scoped;
-            return builder;
-          },
-          transient: () => {
-            descriptor.lifetime = Lifetime.Transient;
-            return builder;
-          },
-        };
-        return builder;
-      },
-    };
+  register<Types extends SourceType[]>(...identifiers: { [K in keyof Types]: ServiceIdentifier<Types[K]> }): IServiceBuilder<EnsureObject<UnionToIntersection<Types[number]>>> {
+    return new ServiceBuilder(identifiers, this.isScoped, (identifier, descriptor) => this.addService(identifier, descriptor));
   }
 
   private addService<T extends SourceType>(identifier: ServiceIdentifier<T>, descriptor: ServiceDescriptor<T>) {
-    this.logger.info('Adding service', { identifier, descriptor });
+    this.logger.info('Adding service', { identifier: identifier.name, descriptor });
     let existing = this.services.get(identifier);
     if (existing == null) {
       existing = [];
@@ -71,8 +44,6 @@ export class ServiceCollection implements IServiceCollection {
     existing.push(descriptor);
   }
 
-  public clone(): IServiceCollection;
-  public clone(scoped: true): IServiceCollection;
   public clone(scoped?: unknown): IServiceCollection {
     const clonedMap = new Map<ServiceIdentifier<any>, ServiceDescriptor<any>[]>();
     for (const [key, descriptors] of this.services) {
@@ -84,7 +55,6 @@ export class ServiceCollection implements IServiceCollection {
   }
 
   public buildProvider(): IServiceProvider {
-    const cloned = this.clone();
-    return new ServiceProvider(this.logger, cloned);
+    return new ServiceProvider(this.logger, this.clone());
   }
 }

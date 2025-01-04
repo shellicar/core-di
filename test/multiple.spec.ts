@@ -1,6 +1,6 @@
 import { equal } from 'node:assert/strict';
 import { describe, it } from 'vitest';
-import { IServiceScope, createServiceCollection, dependsOn } from '../src';
+import { IScopedProvider, createServiceCollection, dependsOn } from '../src';
 
 abstract class ICheckHealth {
   abstract check(): Promise<boolean>;
@@ -29,7 +29,7 @@ class HealthCheck2 implements ICheckHealth {
 }
 
 class CheckAllHealth {
-  @dependsOn(IServiceScope) scope!: IServiceScope;
+  @dependsOn(IScopedProvider) scope!: IScopedProvider;
 
   async health() {
     const all = this.scope.resolveAll(ICheckHealth);

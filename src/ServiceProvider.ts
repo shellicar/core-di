@@ -1,32 +1,23 @@
+import { ResolutionContext } from './ResolutionContext';
 import { DesignDependenciesKey } from './constants';
 import { Lifetime } from './enums';
+import { ResolveMultipleMode } from './enums';
 import { MultipleRegistrationError, SelfDependencyError, ServiceCreationError, UnregisteredServiceError } from './errors';
-import type { IDisposable, IServiceCollection } from './interfaces';
-import { IServiceProvider, IServiceScope } from './interfaces';
+import { type IDisposable, IResolutionScope, IScopedProvider, type IServiceCollection } from './interfaces';
+import { IServiceProvider } from './interfaces';
 import type { ILogger } from './logger';
 import { getMetadata } from './metadata';
 import type { ServiceDescriptor, ServiceIdentifier, ServiceImplementation, SourceType } from './types';
-import { ResolveMultipleMode } from './types';
 
-type Id<T extends SourceType> = ServiceImplementation<T>;
-
-type ResolveMap<T extends SourceType> = Map<ServiceIdentifier<T>, Map<Id<T>, T>>;
-
-const createResolveMap = <T extends SourceType>(): ResolveMap<T> => new Map<ServiceIdentifier<T>, Map<ServiceImplementation<T>, T>>();
-
-export class ServiceProvider implements IServiceProvider, IServiceScope {
-  private scoped = createResolveMap();
+export class ServiceProvider implements IServiceProvider, IScopedProvider {
+  private scoped = new Map<ServiceImplementation<any>, any>();
   private created: IDisposable[] = [];
 
   constructor(
     private readonly logger: ILogger,
-    private readonly services: IServiceCollection,
-    private readonly singletons = createResolveMap(),
+    public readonly Services: IServiceCollection,
+    private readonly singletons = new Map<ServiceImplementation<any>, any>(),
   ) {}
-
-  public get Services(): IServiceCollection {
-    return this.services;
-  }
 
   [Symbol.dispose]() {
     for (const x of this.created) {
@@ -34,48 +25,30 @@ export class ServiceProvider implements IServiceProvider, IServiceScope {
     }
   }
 
-  private resolveFrom<T extends SourceType>(identifier: ServiceIdentifier<T>, descriptor: ServiceDescriptor<T>, lifetimeMap: ResolveMap<T>, currentResolve: ResolveMap<T>): T {
-    let resolvedInstances = lifetimeMap.get(descriptor.implementation);
-    if (resolvedInstances === undefined) {
-      resolvedInstances = new Map();
-      lifetimeMap.set(descriptor.implementation, resolvedInstances);
-    }
-
-    let instance = resolvedInstances.get(descriptor.implementation);
-    if (instance === undefined) {
-      instance = this.createInstance(descriptor, currentResolve);
-      resolvedInstances.set(descriptor.implementation, instance);
-      this.setDependencies<T>(descriptor.implementation, instance, currentResolve);
+  private resolveInternal<T extends SourceType>(descriptor: ServiceDescriptor<T>, context: ResolutionContext): T {
+    let instance = context.getFromLifetime(descriptor.implementation, descriptor.lifetime);
+    if (instance == null) {
+      instance = this.createInstance(descriptor, context);
     }
     return instance;
   }
 
-  private resolveInternal<T extends SourceType>(identifier: ServiceIdentifier<T>, descriptor: ServiceDescriptor<T>, currentResolve: ResolveMap<T>): T {
-    const mapping: Partial<Record<Lifetime, ResolveMap<any>>> = {
-      [Lifetime.Singleton]: this.singletons,
-      [Lifetime.Scoped]: this.scoped,
-      [Lifetime.Resolve]: currentResolve,
-    };
-    const sourceMap = mapping[descriptor.lifetime];
-    if (sourceMap === undefined) {
-      const instance = this.createInstance(descriptor, currentResolve);
-      this.setDependencies<T>(descriptor.implementation, instance, currentResolve);
-      return instance;
-    }
-    return this.resolveFrom(identifier, descriptor, sourceMap, currentResolve);
+  public resolveAll<T extends SourceType>(identifier: ServiceIdentifier<T>, context?: ResolutionContext): T[] {
+    const descriptors = this.Services.get(identifier);
+    return descriptors.map((descriptor) => this.resolveInternal<T>(descriptor, context ?? new ResolutionContext(this.singletons, this.scoped)));
   }
 
-  public resolveAll<T extends SourceType>(identifier: ServiceIdentifier<T>, currentResolve = createResolveMap<T>()): T[] {
-    const descriptors = this.services.get(identifier);
-    return descriptors.map((descriptor) => this.resolveInternal<T>(identifier, descriptor, currentResolve));
-  }
-
-  public resolve<T extends SourceType>(identifier: ServiceIdentifier<T>, currentResolve = createResolveMap<T>()): T {
-    if (identifier.prototype === IServiceScope.prototype || identifier.prototype === IServiceProvider.prototype) {
-      return this as unknown as T;
+  public resolve<T extends SourceType>(identifier: ServiceIdentifier<T>, context?: ResolutionContext): T {
+    if (identifier.prototype === IResolutionScope.prototype || identifier.prototype === IScopedProvider.prototype || identifier.prototype === IServiceProvider.prototype) {
+      return this as IResolutionScope & IScopedProvider & IServiceProvider as T;
     }
 
-    const descriptors = this.services.get(identifier);
+    const descriptor = this.getSingleDescriptor(identifier);
+    return this.resolveInternal(descriptor, context ?? new ResolutionContext(this.singletons, this.scoped));
+  }
+
+  private getSingleDescriptor<T extends SourceType>(identifier: ServiceIdentifier<T>) {
+    const descriptors = this.Services.get(identifier);
     if (descriptors.length === 0) {
       throw new UnregisteredServiceError(identifier);
     }
@@ -86,38 +59,33 @@ export class ServiceProvider implements IServiceProvider, IServiceScope {
       }
     }
     const descriptor = descriptors[descriptors.length - 1];
-    return this.resolveInternal(identifier, descriptor, currentResolve);
+    return descriptor;
   }
 
-  private createInstance<T extends SourceType>(descriptor: ServiceDescriptor<T>, currentResolve: ResolveMap<T>): T {
-    let instance: T;
-    if ('factory' in descriptor) {
-      const factory = descriptor.factory;
-      const resolve = (identifier: ServiceIdentifier<any>) => this.resolve(identifier, currentResolve);
-      const resolveAll = (identifier: ServiceIdentifier<any>) => this.resolveAll(identifier, currentResolve);
-      const createScope = this.createScope.bind(this);
+  private createInstance<T extends SourceType>(descriptor: ServiceDescriptor<T>, context: ResolutionContext): T {
+    const instance = this.createInstanceInternal(descriptor, context);
+    this.setDependencies(descriptor.implementation, instance, context);
+    context.setForLifetime(descriptor.implementation, instance, descriptor.lifetime);
+    return instance;
+  }
 
-      // proxy requests to keep current resolved types
-      try {
-        instance = factory({
-          resolve,
-          resolveAll,
-          createScope,
-          get Services() {
-            return this.Services;
-          },
-        });
-      } catch (err) {
-        this.logger.error(err);
-        throw new ServiceCreationError(descriptor.implementation, err);
-      }
-    } else {
-      try {
-        instance = new descriptor.implementation();
-      } catch (err) {
-        this.logger.error(err);
-        throw new ServiceCreationError(descriptor.implementation, err);
-      }
+  private wrapContext(context: ResolutionContext): IResolutionScope {
+    const resolve = (identifier: ServiceIdentifier<any>) => this.resolve(identifier, context);
+    const resolveAll = (identifier: ServiceIdentifier<any>) => this.resolveAll(identifier, context);
+
+    return {
+      resolve,
+      resolveAll,
+    };
+  }
+
+  private createInstanceInternal<T extends SourceType>(descriptor: ServiceDescriptor<T>, context: ResolutionContext) {
+    let instance: T | undefined;
+    try {
+      instance = descriptor.createInstance(this.wrapContext(context));
+    } catch (err) {
+      this.logger.error(err);
+      throw new ServiceCreationError(descriptor.implementation, err);
     }
     if (descriptor.lifetime !== Lifetime.Singleton && Symbol.dispose in instance) {
       this.created.push(instance as IDisposable);
@@ -125,18 +93,18 @@ export class ServiceProvider implements IServiceProvider, IServiceScope {
     return instance;
   }
 
-  public createScope(): IServiceProvider & IDisposable {
-    return new ServiceProvider(this.logger, this.services.clone(true), this.singletons);
+  public createScope(): IScopedProvider {
+    return new ServiceProvider(this.logger, this.Services.clone(true), this.singletons);
   }
 
-  private setDependencies<T extends SourceType>(type: Id<T>, instance: T, currentResolve: ResolveMap<T>): T {
-    const dependencies = getMetadata<T>(DesignDependenciesKey, type) ?? {};
-    this.logger.debug('Dependencies', type.name, dependencies);
+  private setDependencies<T extends SourceType>(implementation: ServiceImplementation<T>, instance: T, context: ResolutionContext): T {
+    const dependencies = getMetadata<T>(DesignDependenciesKey, implementation) ?? {};
+    this.logger.debug('Dependencies', implementation.name, dependencies);
     for (const [key, identifier] of Object.entries(dependencies)) {
-      if (identifier !== type) {
-        this.logger.debug('Resolving', identifier, 'for', type.name);
-        const dep = this.resolve(identifier, currentResolve);
-        (instance as Record<string, unknown>)[key] = dep;
+      if (identifier !== implementation) {
+        this.logger.debug('Resolving', identifier.name, 'for', implementation.name);
+        const dep = this.resolve(identifier, context);
+        (instance as Record<string, T>)[key] = dep;
       } else {
         throw new SelfDependencyError();
       }

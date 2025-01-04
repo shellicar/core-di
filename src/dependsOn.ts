@@ -1,4 +1,5 @@
 import { DesignDependenciesKey } from './constants';
+import { IResolutionScope, IScopedProvider, IServiceProvider } from './interfaces';
 import { defineMetadata, getMetadata } from './metadata';
 import type { ServiceIdentifier, SourceType } from './types';
 
@@ -12,7 +13,8 @@ const tagProperty = <T extends SourceType>(metadataKey: string, annotationTarget
 };
 
 /**
- * declares a dependency, use on a class field
+ * declares a dependency, use on a class field.
+ * Can also depend on {@link IServiceProvider}, {@link IResolutionScope}, or {@link IScopedProvider}.
  * @param identifier the identifier to depend on, i.e. the interface
  */
 export const dependsOn = <T extends SourceType>(identifier: ServiceIdentifier<T>) => {

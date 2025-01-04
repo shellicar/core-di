@@ -1,82 +1,51 @@
 import type { Lifetime } from './enums';
-import type { MultipleRegistrationError } from './errors';
-import type { EnsureObject, ServiceBuilder, ServiceCollectionOptions, ServiceDescriptor, ServiceIdentifier, ServiceModuleType, SourceType, UnionToIntersection } from './types';
+import { ResolveMultipleMode } from './enums';
+import type { EnsureObject, IServiceBuilder, ServiceCollectionOptions, ServiceDescriptor, ServiceIdentifier, ServiceModuleType, SourceType, UnionToIntersection } from './types';
 
-export abstract class IDisposable {
-  public abstract [Symbol.dispose](): void;
+export interface IDisposable {
+  [Symbol.dispose](): void;
 }
 
-export abstract class IServiceModule {
-  /**
-   * Registers services to the provided collection.
-   * @param services
-   */
-  public abstract registerServices(services: IServiceCollection): void;
+export interface IServiceModule {
+  registerServices(services: IServiceCollection): void;
 }
 
-export abstract class IServiceScope {
+export abstract class IResolutionScope {
   /**
-   * Resolves a single implementation for the identifier.
-   * When finding multiple implementations, it will either
-   * throw a {@link MultipleRegistrationError} or resolve the latest depending on the provided options.
+   * Resolves a single implementation for the given identifier.
+   * @template T The type of service to resolve
+   * @param {ServiceIdentifier<T>} identifier The service identifier
+   * @returns {T} The resolved instance
+   * @throws {MultipleRegistrationError} When multiple implementations exist (unless {@link ServiceCollectionOptions.registrationMode} is set to {@link ResolveMultipleMode.LastRegistered}).
+   * @throws {UnregisteredServiceError} When no implementation exists
    */
   public abstract resolve<T extends SourceType>(identifier: ServiceIdentifier<T>): T;
+
   /**
-   * Resolves all implementations for the identifier.
+   * Resolves all implementations for the given identifier.
+   * @template T The type of service to resolve
+   * @param {ServiceIdentifier<T>} identifier The service identifier
+   * @returns {T[]} Array of resolved instances
    */
   public abstract resolveAll<T extends SourceType>(identifier: ServiceIdentifier<T>): T[];
 }
 
-export abstract class IServiceProvider extends IServiceScope {
-  /**
-   * Gets the services collection that was used to create this provider.
-   */
-  public abstract get Services(): IServiceCollection;
-  /**
-   * Creates a new scope.
-   */
-  public abstract createScope(): IServiceProvider & IDisposable;
+export abstract class IScopedProvider extends IResolutionScope implements IDisposable {
+  public abstract [Symbol.dispose](): void;
 }
 
-export abstract class IServiceCollection {
-  /**
-   * Overrides the lifetime for all the bindings of the given identifier.
-   * @param identifier
-   * @param lifetime
-   */
-  public abstract overrideLifetime<T extends SourceType>(identifier: ServiceIdentifier<T>, lifetime: Lifetime): void;
-  /**
-   * The options that were provided for the service collection.
-   */
-  public abstract readonly options: ServiceCollectionOptions;
-  /**
-   * Gets all the descriptors for the given identifier.
-   * @param identifier
-   */
-  public abstract get<T extends SourceType>(identifier: ServiceIdentifier<T>): ServiceDescriptor<T>[];
-  /**
-   * Starts the registration process for the given service identifiers.
-   * @param identifiers
-   * @returns a builder than can be used to define the implementation and lifetime.
-   */
-  public abstract register<Types extends SourceType[]>(...identifiers: { [K in keyof Types]: ServiceIdentifier<Types[K]> }): ServiceBuilder<EnsureObject<UnionToIntersection<Types[number]>>>;
-  /**
-   * Registers the services from the provided modules.
-   * @param modules
-   */
-  public abstract registerModules(...modules: ServiceModuleType[]): void;
-  /**
-   * Builds a service provider. This takes a snapshot of the current configuration.
-   * Further changes to the service collection will not be reflected in the provider.
-   */
-  public abstract buildProvider(): IServiceProvider;
-  /**
-   * Clones the current service collection.
-   */
-  public abstract clone(): IServiceCollection;
-  /**
-   * Clones the service collection for a scoped provider.
-   * @param scoped
-   */
-  public abstract clone(scoped: true): IServiceCollection;
+export abstract class IServiceProvider extends IResolutionScope {
+  public abstract readonly Services: IServiceCollection;
+  public abstract createScope(): IScopedProvider;
+}
+
+export interface IServiceCollection {
+  readonly options: ServiceCollectionOptions;
+  get<T extends SourceType>(identifier: ServiceIdentifier<T>): ServiceDescriptor<T>[];
+  register<Types extends SourceType[]>(...identifiers: { [K in keyof Types]: ServiceIdentifier<Types[K]> }): IServiceBuilder<EnsureObject<UnionToIntersection<Types[number]>>>;
+  registerModules(...modules: ServiceModuleType[]): void;
+  overrideLifetime<T extends SourceType>(identifier: ServiceIdentifier<T>, lifetime: Lifetime): void;
+  buildProvider(): IServiceProvider;
+  clone(): IServiceCollection;
+  clone(scoped: true): IServiceCollection;
 }

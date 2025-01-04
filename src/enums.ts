@@ -12,3 +12,8 @@ export enum LogLevel {
   Error = 3,
   None = 4,
 }
+
+export enum ResolveMultipleMode {
+  Error = 'ERROR',
+  LastRegistered = 'LAST_REGISTERED',
+}
