@@ -2,12 +2,12 @@ import type { Lifetime } from './enums';
 import { ResolveMultipleMode } from './enums';
 import type { EnsureObject, IServiceBuilder, ServiceCollectionOptions, ServiceDescriptor, ServiceIdentifier, ServiceModuleType, SourceType, UnionToIntersection } from './types';
 
-export interface IDisposable {
-  [Symbol.dispose](): void;
+export abstract class IDisposable {
+  public abstract [Symbol.dispose](): void;
 }
 
-export interface IServiceModule {
-  registerServices(services: IServiceCollection): void;
+export abstract class IServiceModule {
+  public abstract registerServices(services: IServiceCollection): void;
 }
 
 export abstract class IResolutionScope {
@@ -39,13 +39,13 @@ export abstract class IServiceProvider extends IResolutionScope {
   public abstract createScope(): IScopedProvider;
 }
 
-export interface IServiceCollection {
-  readonly options: ServiceCollectionOptions;
-  get<T extends SourceType>(identifier: ServiceIdentifier<T>): ServiceDescriptor<T>[];
-  register<Types extends SourceType[]>(...identifiers: { [K in keyof Types]: ServiceIdentifier<Types[K]> }): IServiceBuilder<EnsureObject<UnionToIntersection<Types[number]>>>;
-  registerModules(...modules: ServiceModuleType[]): void;
-  overrideLifetime<T extends SourceType>(identifier: ServiceIdentifier<T>, lifetime: Lifetime): void;
-  buildProvider(): IServiceProvider;
-  clone(): IServiceCollection;
-  clone(scoped: true): IServiceCollection;
+export abstract class IServiceCollection {
+  public abstract readonly options: ServiceCollectionOptions;
+  public abstract get<T extends SourceType>(identifier: ServiceIdentifier<T>): ServiceDescriptor<T>[];
+  public abstract register<Types extends SourceType[]>(...identifiers: { [K in keyof Types]: ServiceIdentifier<Types[K]> }): IServiceBuilder<EnsureObject<UnionToIntersection<Types[number]>>>;
+  public abstract registerModules(...modules: ServiceModuleType[]): void;
+  public abstract overrideLifetime<T extends SourceType>(identifier: ServiceIdentifier<T>, lifetime: Lifetime): void;
+  public abstract buildProvider(): IServiceProvider;
+  public abstract clone(): IServiceCollection;
+  public abstract clone(scoped: true): IServiceCollection;
 }
