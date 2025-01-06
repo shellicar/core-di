@@ -1,11 +1,11 @@
 import { ok } from 'node:assert/strict';
 import { describe, it } from 'vitest';
-import { type IServiceCollection, type IServiceModule, createServiceCollection } from '../src';
+import { type IServiceCollection, IServiceModule, createServiceCollection } from '../src';
 
 class IAbstract {}
 class Concrete extends IAbstract {}
 
-class MyModule implements IServiceModule {
+class MyModule extends IServiceModule {
   public registerServices(services: IServiceCollection): void {
     services.register(IAbstract).to(Concrete);
   }

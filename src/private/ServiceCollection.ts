@@ -1,7 +1,7 @@
 import type { Lifetime } from '../enums';
-import type { IServiceCollection, IServiceProvider } from '../interfaces';
+import type { IServiceBuilder, IServiceCollection, IServiceProvider } from '../interfaces';
 import type { ILogger } from '../logger';
-import type { EnsureObject, IServiceBuilder, ServiceCollectionOptions, ServiceDescriptor, ServiceIdentifier, ServiceModuleType, SourceType, UnionToIntersection } from '../types';
+import type { EnsureObject, ServiceCollectionOptions, ServiceDescriptor, ServiceIdentifier, ServiceModuleType, SourceType, UnionToIntersection } from '../types';
 import { ServiceBuilder } from './ServiceBuilder';
 import { ServiceProvider } from './ServiceProvider';
 
