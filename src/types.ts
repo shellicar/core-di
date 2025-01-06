@@ -1,5 +1,5 @@
 import type { Lifetime, LogLevel, ResolveMultipleMode } from './enums';
-import type { IResolutionScope, IServiceModule } from './interfaces';
+import type { ILifetimeBuilder, IResolutionScope, IServiceModule } from './interfaces';
 import type { ILogger } from './logger';
 import type { ConsoleLogger } from './private/consoleLogger';
 
@@ -15,11 +15,11 @@ export type InstanceFactory<T extends SourceType> = (x: IResolutionScope) => T;
 
 export type ServiceModuleType = Newable<IServiceModule>;
 
-export interface ServiceDescriptor<T extends SourceType> {
+export type ServiceDescriptor<T extends SourceType> = {
   readonly implementation: ServiceImplementation<T>;
   lifetime: Lifetime;
   createInstance(context: IResolutionScope): T;
-}
+};
 
 export type MetadataType<T extends SourceType> = Record<string | symbol, ServiceIdentifier<T>>;
 
@@ -46,15 +46,7 @@ export type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) ex
 
 export type EnsureObject<T> = T extends object ? T : never;
 
-export interface ILifetimeBuilder {
-  singleton(): ILifetimeBuilder;
-  scoped(): ILifetimeBuilder;
-  transient(): ILifetimeBuilder;
-}
-
-export interface IServiceBuilder<T extends SourceType> {
-  to: {
-    (implementation: ServiceImplementation<T>): ILifetimeBuilder;
-    (implementation: ServiceImplementation<T>, factory: InstanceFactory<T>): ILifetimeBuilder;
-  };
-}
+export type ServiceBuilderOptions<T extends SourceType> = {
+  (implementation: ServiceImplementation<T>): ILifetimeBuilder;
+  (implementation: ServiceImplementation<T>, factory: InstanceFactory<T>): ILifetimeBuilder;
+};

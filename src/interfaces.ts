@@ -1,6 +1,6 @@
 import type { Lifetime } from './enums';
 import { ResolveMultipleMode } from './enums';
-import type { EnsureObject, IServiceBuilder, ServiceCollectionOptions, ServiceDescriptor, ServiceIdentifier, ServiceModuleType, SourceType, UnionToIntersection } from './types';
+import type { EnsureObject, ServiceBuilderOptions, ServiceCollectionOptions, ServiceDescriptor, ServiceIdentifier, ServiceModuleType, SourceType, UnionToIntersection } from './types';
 
 export abstract class IDisposable {
   public abstract [Symbol.dispose](): void;
@@ -31,6 +31,7 @@ export abstract class IResolutionScope {
 }
 
 export abstract class IScopedProvider extends IResolutionScope implements IDisposable {
+  public abstract readonly Services: IServiceCollection;
   public abstract [Symbol.dispose](): void;
 }
 
@@ -48,4 +49,14 @@ export abstract class IServiceCollection {
   public abstract buildProvider(): IServiceProvider;
   public abstract clone(): IServiceCollection;
   public abstract clone(scoped: true): IServiceCollection;
+}
+
+export abstract class ILifetimeBuilder {
+  public abstract singleton(): ILifetimeBuilder;
+  public abstract scoped(): ILifetimeBuilder;
+  public abstract transient(): ILifetimeBuilder;
+}
+
+export abstract class IServiceBuilder<T extends SourceType> {
+  public abstract to: ServiceBuilderOptions<T>;
 }
