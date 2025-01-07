@@ -1,6 +1,6 @@
 {
   "name": "@shellicar/core-di",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "A basic dependency injection library",
   "repository": {
     "type": "git",
@@ -62,5 +62,10 @@
   },
   "dependencies": {
     "@abraham/reflection": "^0.12.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "cross-spawn": "^7.0.6"
+    }
   }
 }
