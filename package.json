@@ -62,5 +62,10 @@
   },
   "dependencies": {
     "@abraham/reflection": "^0.12.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "cross-spawn": "^7.0.6"
+    }
   }
 }
