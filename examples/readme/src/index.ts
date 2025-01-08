@@ -1,3 +1,5 @@
+import './quickstart';
+
 // * Type-safe registration.
 import './typesafe-registration';
 // * Type-safe resolution.

@@ -91,7 +91,9 @@
 
 Initial release.
 
-[1.1.0]: https://github.com/shellicar/core-di/releases/tag/1.1.0
+[2.1.0]: https://github.com/shellicar/core-di/releases/tag/2.1.0
+[2.0.1]: https://github.com/shellicar/core-di/releases/tag/2.0.1
+[2.0.0]: https://github.com/shellicar/core-di/releases/tag/2.0.0
 [1.0.0]: https://github.com/shellicar/core-di/releases/tag/1.0.0
 [0.1.0]: https://github.com/shellicar/core-di/releases/tag/0.1.0
 [0.0.4]: https://github.com/shellicar/core-di/releases/tag/0.0.4

@@ -10,17 +10,12 @@
     "lint": "biome lint",
     "format": "biome format",
     "check": "biome check",
-    "ci": "biome ci",
-    "ci:fix": "biome check --fix --diagnostic-level=error",
+    "ci": "biome ci --diagnostic-level=error",
+    "ci:fix": "biome check --diagnostic-level=error --fix",
     "list-mismatches": "syncpack list-mismatches",
     "fix-mismatches": "syncpack fix-mismatches",
-    "updates": "npm-check-updates",
+    "updates": "npm-check-updates --workspaces",
     "postinstall": "lefthook install"
-  },
-  "pnpm": {
-    "overrides": {
-      "cross-spawn": "^7.0.6"
-    }
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
@@ -28,5 +23,10 @@
     "npm-check-updates": "^17.1.13",
     "syncpack": "^13.0.0",
     "turbo": "^2.3.3"
+  },
+  "pnpm": {
+    "overrides": {
+      "cross-spawn": "^7.0.6"
+    }
   }
 }
