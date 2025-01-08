@@ -7,8 +7,6 @@
 
 ## Installation & Quick Start
 
-## Installation & Quick Start
-
 ```sh
 npm i --save @shellicar/core-di
 ```
