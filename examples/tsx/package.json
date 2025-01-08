@@ -7,7 +7,7 @@
     "type-check": "tsc -p tsconfig.check.json"
   },
   "devDependencies": {
-    "@shellicar/core-di": "link:../../packages/core-di",
+    "@shellicar/core-di": "workspace:^",
     "@tsconfig/node20": "^20.1.4",
     "@types/node": "^22.10.5",
     "tsx": "^4.19.2",
