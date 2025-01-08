@@ -1,4 +1,4 @@
-import { fail } from 'node:assert';
+import { fail } from 'node:assert/strict';
 import { throws } from 'node:assert/strict';
 import { ok } from 'node:assert/strict';
 import { describe, it } from 'vitest';

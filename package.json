@@ -1,71 +1,32 @@
 {
-  "name": "@shellicar/core-di",
-  "version": "2.0.1",
-  "description": "A basic dependency injection library",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/shellicar/core-di.git"
-  },
-  "private": false,
+  "private": true,
   "packageManager": "pnpm@9.15.3+sha512.1f79bc245a66eb0b07c5d4d83131240774642caaa86ef7d0434ab47c0d16f66b04e21e0c086eb61e62c77efc4d7f7ec071afad3796af64892fae66509173893a",
-  "main": "./dist/index.js",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
-  "exports": {
-    ".": {
-      "require": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/index.js"
-      },
-      "import": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/index.mjs"
-      }
-    }
-  },
-  "files": ["dist"],
   "scripts": {
-    "build": "tsup-node",
-    "dev": "tsup-node --watch",
-    "test": "vitest run",
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "start": "turbo run start",
+    "test": "turbo run test",
+    "type-check": "turbo run type-check",
     "lint": "biome lint",
     "format": "biome format",
     "check": "biome check",
-    "type-check": "tsc -p tsconfig.check.json",
     "ci": "biome ci",
     "ci:fix": "biome check --fix --diagnostic-level=error",
+    "list-mismatches": "syncpack list-mismatches",
+    "fix-mismatches": "syncpack fix-mismatches",
     "updates": "npm-check-updates",
-    "postinstall": "lefthook install",
-    "prepublishOnly": "run-p build ci",
-    "postpublish": "pnpm version --no-git-tag-version patch"
-  },
-  "keywords": ["dependency injection", "di", "inversion of control container", "ioc"],
-  "author": "Stephen Hellicar",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/shellicar/core-di/issues"
-  },
-  "homepage": "https://github.com/shellicar/core-di#readme",
-  "devDependencies": {
-    "@biomejs/biome": "^1.9.4",
-    "@tsconfig/node20": "^20.1.4",
-    "@types/node": "^22.10.5",
-    "lefthook": "^1.10.1",
-    "npm-check-updates": "^17.1.13",
-    "npm-run-all2": "^7.0.2",
-    "rimraf": "^6.0.1",
-    "terser": "^5.37.0",
-    "tsup": "^8.3.5",
-    "tsx": "^4.19.2",
-    "typescript": "^5.7.2",
-    "vitest": "^2.1.8"
-  },
-  "dependencies": {
-    "@abraham/reflection": "^0.12.0"
+    "postinstall": "lefthook install"
   },
   "pnpm": {
     "overrides": {
       "cross-spawn": "^7.0.6"
     }
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
+    "lefthook": "^1.10.1",
+    "npm-check-updates": "^17.1.13",
+    "syncpack": "^13.0.0",
+    "turbo": "^2.3.3"
   }
 }

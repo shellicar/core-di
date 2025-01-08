@@ -1,6 +1,40 @@
 # @shellicar/core-di
 
-A basic dependency injection library.
+> A basic dependency injection library for TypeScript
+
+[![npm package](https://img.shields.io/npm/v/@shellicar/core-di.svg)](https://npmjs.com/package/@shellicar/core-di)
+[![build status](https://github.com/shellicar/core-di/actions/workflows/node.js.yml/badge.svg)](https://github.com/shellicar/core-di/actions/workflows/node.js.yml)
+
+## Features
+
+- 🎯 Type-safe registration and resolution
+- 🏭 Factory method support
+- 🎨 Decorator-based property injection
+- 🔄 Flexible lifetime management
+- 📦 Service modules for organization
+
+## Installation & Quick Start
+
+```sh
+npm i --save @shellicar/core-di
+```
+
+```sh
+pnpm add @shellicar/core-di
+```
+
+```ts
+import { createServiceCollection } from '@shellicar/core-di';
+
+abstract class IAbstract {}
+class Concrete implements IAbstract {}
+
+const services = createServiceCollection();
+services.register(IAbstract).to(Concrete);
+const provider = services.buildProvider();
+
+const svc = provider.resolve(IAbstract);
+```
 
 <!-- BEGIN_ECOSYSTEM -->
 
@@ -36,11 +70,13 @@ I started using `InversifyJS`, and tried out some others along the way, such as 
 
 With TypeScript 5.0 generally available with non-experimental decorators, most DI libraries have not been updated, so I decided to create my own.
 
-## Features
+## Feature Examples
 
 My set of features is simple, based on my current usage
 
-* Type-safe registration.
+See [readme examples](./examples/readme/src) for example source code.
+
+- Type-safe registration.
 
 ```ts
 const services = createServiceCollection();
@@ -50,7 +86,7 @@ services.register(IAbstract).to(Concrete);
 //                              ^ Error
 ```
 
-* Type-safe resolution.
+- Type-safe resolution.
 
 ```ts
 const provider = services.buildProvider();
@@ -58,7 +94,7 @@ const svc = provider.resolve(IMyService);
 //    ^ IMyService
 ```
 
-* Provide factory methods for instantiating classes.
+- Provide factory methods for instantiating classes.
 
 ```ts
 services.register(Redis).to(Redis, x => {
@@ -70,7 +106,7 @@ services.register(Redis).to(Redis, x => {
 });
 ```
 
-* Use property injection with decorators for simple dependency definition.
+- Use property injection with decorators for simple dependency definition.
 
 ```ts
 abstract class IDependency {}
@@ -79,14 +115,14 @@ class Service implements IService {
 }
 ```
 
-* Provide multiple implementations for identifiers and provide a `resolveAll` method.
-* Define instance lifetime with simple builder pattern.
+- Provide multiple implementations for identifiers and provide a `resolveAll` method.
+- Define instance lifetime with simple builder pattern.
 
 ```ts
 services.register(IAbstract).to(Concrete).singleton();
 ```
 
-* Create scopes to allow "per-request" lifetimes.
+- Create scopes to allow "per-request" lifetimes.
 
 ```ts
 const services = createServiceCollection();
@@ -94,14 +130,14 @@ const provider = services.buildProvider();
 using scope = provider.createScope();
 ```
 
-* Register classes during a scope
+- Register classes during a scope
 
 ```ts
 using scope = provider.createScope();
 scope.Services.register(IContext).to(Context);
 ```
 
-* Multiple registrations
+- Multiple registrations
 
 ```ts
 services.register(IAbstract1, IAbstract2).to(Concrete).singleton();
@@ -109,7 +145,7 @@ const provider = services.buildProvider();
 provider.resolve(IAbstract1) === provider.resolve(IAbstract2);
 ```
 
-* Override registrations (e.g.: for testing)
+- Override registrations (e.g.: for testing)
 
 ```ts
 import { ok } from 'node:assert/strict';
@@ -122,17 +158,17 @@ const options = provider.resolve(IOptions);
 ok(options instanceof MockOptions);
 ```
 
-* Override lifetimes (e.g.: for testing)
+- Override lifetimes (e.g.: for testing)
 
 ```ts
 const services = createServiceCollection({ logLevel: LogLevel.Debug });
 services.register(IAbstract).to(Concrete).singleton();
 const provider = services.buildProvider();
-sp.Services.overrideLifetime(IAbstract, Lifetime.Transient);
-sp.resolve(IAbstract) !== sp.resolve(IAbstract);
+provider.Services.overrideLifetime(IAbstract, Lifetime.Transient);
+provider.resolve(IAbstract) !== provider.resolve(IAbstract);
 ```
 
-* Logging options
+- Logging options
 
 ```ts
 class CustomLogger extends ILogger {
@@ -146,7 +182,7 @@ const services1 = createServiceCollection({ logger: new CustomLogger() });
 const services2 = createServiceCollection({ logLevel: LogLevel.Debug });
 ```
 
-* Service modules
+- Service modules
 
 ```ts
 class IAbstract {}
@@ -215,7 +251,7 @@ const svc = scope.resolve(IDatePrinter);
 console.log(svc.handle());
 ```
 
-## Inspired by
+## Credits & Inspiration
 
-* [InversifyJS](https://github.com/inversify/InversifyJS)
-* [Microsoft.Extensions.DependencyInjection](https://github.com/dotnet/runtime/tree/main/src/libraries/Microsoft.Extensions.DependencyInjection)
+- [InversifyJS](https://github.com/inversify/InversifyJS)
+- [Microsoft.Extensions.DependencyInjection](https://github.com/dotnet/runtime/tree/main/src/libraries/Microsoft.Extensions.DependencyInjection)

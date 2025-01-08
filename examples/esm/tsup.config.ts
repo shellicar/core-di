@@ -1,17 +1,17 @@
 import { defineConfig } from 'tsup';
 
 export default defineConfig((config) => ({
-  entry: ['src/index.ts'],
+  entry: ['src/main.ts'],
   splitting: true,
-  sourcemap: true,
+  sourcemap: false,
   treeshake: true,
-  dts: true,
-  clean: !config.watch,
-  minify: config.watch ? false : 'terser',
+  dts: false,
+  clean: true,
+  minify: false,
   keepNames: true,
   bundle: true,
   tsconfig: 'tsconfig.json',
   target: 'node20',
-  format: ['esm', 'cjs'],
+  format: ['esm'],
   outDir: 'dist',
 }));

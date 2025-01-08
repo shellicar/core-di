@@ -1,5 +1,27 @@
 # Changelog
 
+## [2.1.0] - 2025-01-08
+
+## Structure
+
+- Use `packages` and `examples` monorepo structure
+
+## Packaging
+
+- Use `tsup-node`
+- Declare `@abraham/reflection` as dev dependency
+
+## Documentation
+
+- Add `readme` example project
+
+## [2.0.1] - 2025-01-07
+
+## Dependencies
+
+- Update `cross-spawn`
+  - See: [CVE-2024-21538](https://nvd.nist.gov/vuln/detail/CVE-2024-21538)
+
 ## [2.0.0] - 2025-01-05
 
 ### Breaking
