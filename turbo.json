@@ -5,7 +5,7 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "inputs": ["**/*.ts", "**/*.graphql"],
+      "inputs": ["tsconfig.json", "**/*.ts"],
       "outputs": ["dist"]
     },
     "dev": {
