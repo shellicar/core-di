@@ -63,6 +63,25 @@ importers:
         specifier: ^5.7.2
         version: 5.7.2
 
+  examples/readme:
+    dependencies:
+      '@shellicar/core-di':
+        specifier: workspace:^
+        version: link:../../packages/core-di
+    devDependencies:
+      '@tsconfig/node20':
+        specifier: ^20.1.4
+        version: 20.1.4
+      '@types/node':
+        specifier: ^22.10.5
+        version: 22.10.5
+      tsx:
+        specifier: ^4.19.2
+        version: 4.19.2
+      typescript:
+        specifier: ^5.7.2
+        version: 5.7.2
+
   examples/tsx:
     devDependencies:
       '@shellicar/core-di':
