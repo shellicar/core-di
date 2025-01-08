@@ -7,7 +7,7 @@ export default defineConfig((config) => ({
   treeshake: true,
   dts: true,
   clean: true,
-  minify: 'terser',
+  minify: config.watch ? false : 'terser',
   keepNames: true,
   bundle: true,
   tsconfig: 'tsconfig.json',
