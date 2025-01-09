@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.2.0] - 2025-01-10
+
+### Fixed
+
+- Fix export paths
+
 ## [2.1.1] - 2025-01-10
 
 ### Changed
@@ -97,6 +103,7 @@
 
 Initial release.
 
+[2.2.0]: https://github.com/shellicar/core-di/releases/tag/2.2.0
 [2.1.1]: https://github.com/shellicar/core-di/releases/tag/2.1.1
 [2.1.0]: https://github.com/shellicar/core-di/releases/tag/2.1.0
 [2.0.1]: https://github.com/shellicar/core-di/releases/tag/2.0.1
