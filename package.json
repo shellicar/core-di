@@ -15,7 +15,8 @@
     "list-mismatches": "syncpack list-mismatches",
     "fix-mismatches": "syncpack fix-mismatches",
     "updates": "npm-check-updates --workspaces",
-    "postinstall": "lefthook install"
+    "postinstall": "lefthook install",
+    "verify-version": "./scripts/verify-version.sh"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",

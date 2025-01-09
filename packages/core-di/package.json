@@ -1,12 +1,20 @@
 {
   "name": "@shellicar/core-di",
+  "private": false,
   "version": "2.1.0",
+  "type": "module",
+  "license": "MIT",
+  "author": "Stephen Hellicar",
   "description": "A basic dependency injection library",
+  "keywords": ["dependency injection", "di", "inversion of control container", "ioc"],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/shellicar/core-di.git"
   },
-  "private": false,
+  "bugs": {
+    "url": "https://github.com/shellicar/core-di/issues"
+  },
+  "homepage": "https://github.com/shellicar/core-di#readme",
   "publishConfig": {
     "access": "public"
   },
@@ -33,13 +41,6 @@
     "test": "vitest run",
     "type-check": "tsc -p tsconfig.check.json"
   },
-  "keywords": ["dependency injection", "di", "inversion of control container", "ioc"],
-  "author": "Stephen Hellicar",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/shellicar/core-di/issues"
-  },
-  "homepage": "https://github.com/shellicar/core-di#readme",
   "devDependencies": {
     "@abraham/reflection": "^0.12.0",
     "@tsconfig/node20": "^20.1.4",

@@ -12,6 +12,8 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
@@ -22,7 +24,8 @@ jobs:
       - run: pnpm run --if-present build
       - run: pnpm run --if-present test
       - run: pnpm run ci
-      - run: pnpm publish --ignore-scripts --no-git-checks
-        working-directory: packages/core-di
+      - run: |
+          cd "packages/$(cat .packagename)"
+          pnpm publish --ignore-scripts --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
