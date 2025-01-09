@@ -2,9 +2,6 @@
 
 > A basic dependency injection library for TypeScript
 
-[![npm package](https://img.shields.io/npm/v/@shellicar/core-di.svg)](https://npmjs.com/package/@shellicar/core-di)
-[![build status](https://github.com/shellicar/core-di/actions/workflows/node.js.yml/badge.svg)](https://github.com/shellicar/core-di/actions/workflows/node.js.yml)
-
 ## Installation & Quick Start
 
 ```sh

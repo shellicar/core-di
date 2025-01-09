@@ -1,6 +1,6 @@
 # @shellicar/core-di
 
-> A basic dependency injection library for TypeScript
+A basic dependency injection library for TypeScript
 
 [![npm package](https://img.shields.io/npm/v/@shellicar/core-di.svg)](https://npmjs.com/package/@shellicar/core-di)
 [![build status](https://github.com/shellicar/core-di/actions/workflows/node.js.yml/badge.svg)](https://github.com/shellicar/core-di/actions/workflows/node.js.yml)
@@ -64,9 +64,9 @@ const svc = provider.resolve(IAbstract);
 
 ## Motivation
 
-Coming from .NET I am used to DI frameworks/libraries such as `Autofac`, `Ninject`, `StructureMap`, `Unity`, and Microsoft's own `DependencyInjection`.
+Coming from .NET I am used to DI frameworks/libraries such as [Autofac], [Ninject], [StructureMap], [Unity], and Microsoft's own [DependencyInjection].
 
-I started using `InversifyJS`, and tried out some others along the way, such as `diod`.
+I started using [InversifyJS], and tried out some others along the way, such as `diod`.
 
 With TypeScript 5.0 generally available with non-experimental decorators, most DI libraries have not been updated, so I decided to create my own.
 
@@ -253,5 +253,12 @@ console.log(svc.handle());
 
 ## Credits & Inspiration
 
-- [InversifyJS](https://github.com/inversify/InversifyJS)
-- [Microsoft.Extensions.DependencyInjection](https://github.com/dotnet/runtime/tree/main/src/libraries/Microsoft.Extensions.DependencyInjection)
+- [InversifyJS]
+- [Microsoft.Extensions.DependencyInjection][DependencyInjection]
+
+[Ninject]: https://github.com/ninject/Ninject
+[StructureMap]: https://github.com/structuremap/structuremap
+[Unity]: https://github.com/unitycontainer/unity
+[Autofac]: https://github.com/autofac/Autofac.Extensions.DependencyInjection
+[InversifyJS]: https://github.com/inversify/InversifyJS
+[DependencyInjection]: https://github.com/dotnet/runtime/tree/main/src/libraries/Microsoft.Extensions.DependencyInjection
