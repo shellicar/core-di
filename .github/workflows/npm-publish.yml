@@ -22,7 +22,8 @@ jobs:
       - run: pnpm run --if-present build
       - run: pnpm run --if-present test
       - run: pnpm run ci
-      - run: pnpm publish --ignore-scripts --no-git-checks
-        working-directory: packages/core-di
+      - run: |
+          cd "packages/$(cat .packagename)"
+          pnpm publish --ignore-scripts --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}

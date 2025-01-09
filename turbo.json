@@ -23,6 +23,7 @@
     },
     "type-check": {
       "dependsOn": ["^build"],
+      "inputs": ["tsconfig.check.json"],
       "outputs": ["**/node_modules/.cache/tsbuildinfo.json"]
     }
   }

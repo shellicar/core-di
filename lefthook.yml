@@ -7,3 +7,5 @@ pre-push:
   commands:
     check:
       run: pnpm biome ci --diagnostic-level=error --no-errors-on-unmatched --colors=off {push_files}
+    version-check:
+      run: pnpm verify-version
