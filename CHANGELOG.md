@@ -1,23 +1,29 @@
 # Changelog
 
+## [2.1.1] - 2025-01-10
+
+### Changed
+
+- Change back to `tsup`
+
 ## [2.1.0] - 2025-01-08
 
-## Structure
+### Structure
 
 - Use `packages` and `examples` monorepo structure
 
-## Packaging
+### Packaging
 
 - Use `tsup-node`
 - Declare `@abraham/reflection` as dev dependency
 
-## Documentation
+### Documentation
 
 - Add `readme` example project
 
 ## [2.0.1] - 2025-01-07
 
-## Dependencies
+### Dependencies
 
 - Update `cross-spawn`
   - See: [CVE-2024-21538](https://nvd.nist.gov/vuln/detail/CVE-2024-21538)
@@ -91,6 +97,7 @@
 
 Initial release.
 
+[2.1.1]: https://github.com/shellicar/core-di/releases/tag/2.1.1
 [2.1.0]: https://github.com/shellicar/core-di/releases/tag/2.1.0
 [2.0.1]: https://github.com/shellicar/core-di/releases/tag/2.0.1
 [2.0.0]: https://github.com/shellicar/core-di/releases/tag/2.0.0
