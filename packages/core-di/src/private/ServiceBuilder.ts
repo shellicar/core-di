@@ -15,11 +15,7 @@ export class ServiceBuilder<T extends SourceType> implements IServiceBuilder<T> 
   public to(implementation: ServiceImplementation<T>): ILifetimeBuilder;
   public to(implementation: ServiceIdentifier<T>, factory?: InstanceFactory<T>): ILifetimeBuilder;
   public to(implementation: ServiceRegistration<T>, factory?: InstanceFactory<T> | undefined): ILifetimeBuilder {
-    if (factory === undefined) {
-      this.descriptor = this.createDescriptor(undefined, implementation as ServiceImplementation<T>);
-    } else {
-      this.descriptor = this.createDescriptor(factory, implementation as ServiceIdentifier<T>);
-    }
+    this.descriptor = this.createDescriptor(factory, implementation);
 
     for (const identifier of this.identifiers) {
       this.addService(identifier, this.descriptor);
@@ -27,8 +23,6 @@ export class ServiceBuilder<T extends SourceType> implements IServiceBuilder<T> 
     return this;
   }
 
-  private createDescriptor(factory: undefined, implementation: ServiceImplementation<T>): ServiceDescriptor<T>;
-  private createDescriptor(factory: InstanceFactory<T>, implementation: ServiceIdentifier<T>): ServiceDescriptor<T>;
   private createDescriptor(factory: InstanceFactory<T> | undefined, implementation: ServiceRegistration<T>): ServiceDescriptor<T> {
     return {
       implementation,

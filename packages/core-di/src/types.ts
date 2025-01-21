@@ -51,3 +51,14 @@ export type ServiceBuilderOptions<T extends SourceType> = {
   (implementation: ServiceImplementation<T>): ILifetimeBuilder;
   (implementation: ServiceIdentifier<T>, factory: InstanceFactory<T>): ILifetimeBuilder;
 };
+
+export type RegistrationMap<T extends SourceType = any> = Map<ServiceRegistration<T>, T>;
+export type DescriptorMap<T extends SourceType = any> = Map<ServiceIdentifier<T>, ServiceDescriptor<T>[]>;
+
+export const createRegistrationMap = <T extends SourceType = any>() => {
+  return new Map<ServiceRegistration<T>, T>();
+};
+
+export const createDescriptorMap = <T extends SourceType = any>() => {
+  return new Map<ServiceIdentifier<T>, ServiceDescriptor<T>[]>();
+};

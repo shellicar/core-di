@@ -1,7 +1,7 @@
 import type { Lifetime } from '../enums';
 import type { IServiceBuilder, IServiceCollection, IServiceProvider } from '../interfaces';
 import type { ILogger } from '../logger';
-import type { EnsureObject, ServiceCollectionOptions, ServiceDescriptor, ServiceIdentifier, ServiceModuleType, SourceType, UnionToIntersection } from '../types';
+import { type DescriptorMap, type EnsureObject, type ServiceCollectionOptions, type ServiceDescriptor, type ServiceIdentifier, type ServiceModuleType, type SourceType, type UnionToIntersection, createDescriptorMap } from '../types';
 import { ServiceBuilder } from './ServiceBuilder';
 import { ServiceProvider } from './ServiceProvider';
 
@@ -10,7 +10,7 @@ export class ServiceCollection implements IServiceCollection {
     private readonly logger: ILogger,
     public readonly options: ServiceCollectionOptions,
     private readonly isScoped: boolean,
-    private readonly services = new Map<ServiceIdentifier<any>, ServiceDescriptor<any>[]>(),
+    private readonly services = createDescriptorMap(),
   ) {}
 
   public registerModules(...modules: ServiceModuleType[]): void {
@@ -45,7 +45,7 @@ export class ServiceCollection implements IServiceCollection {
   }
 
   public clone(scoped?: unknown): IServiceCollection {
-    const clonedMap = new Map<ServiceIdentifier<any>, ServiceDescriptor<any>[]>();
+    const clonedMap: DescriptorMap = createDescriptorMap();
     for (const [key, descriptors] of this.services) {
       const clonedDescriptors = descriptors.map((descriptor) => ({ ...descriptor }));
       clonedMap.set(key, clonedDescriptors);

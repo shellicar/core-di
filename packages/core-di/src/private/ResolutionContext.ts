@@ -1,15 +1,15 @@
 import { Lifetime } from '../enums';
-import type { ServiceIdentifier, ServiceImplementation, ServiceRegistration, SourceType } from '../types';
+import { type RegistrationMap, type ServiceRegistration, type SourceType, createRegistrationMap } from '../types';
 
 export class ResolutionContext {
   constructor(
-    private readonly singletons: Map<ServiceIdentifier<any> | ServiceImplementation<any>, any>,
-    private readonly scoped: Map<ServiceIdentifier<any> | ServiceImplementation<any>, any>,
+    private readonly singletons: RegistrationMap,
+    private readonly scoped: RegistrationMap,
   ) {}
 
-  private readonly transient = new Map<ServiceImplementation<any>, any>();
+  private readonly transient: RegistrationMap = createRegistrationMap();
 
-  public getFromLifetime<T extends SourceType>(implementation: ServiceRegistration<T>, lifetime: Lifetime): T {
+  public getFromLifetime<T extends SourceType>(implementation: ServiceRegistration<T>, lifetime: Lifetime): T | null {
     const map = this.getMapForLifetime(lifetime);
     return map?.get(implementation);
   }
@@ -20,7 +20,7 @@ export class ResolutionContext {
   }
 
   private getMapForLifetime(lifetime: Lifetime) {
-    const map: Partial<Record<Lifetime, Map<ServiceIdentifier<any> | ServiceImplementation<any>, any>>> = {
+    const map: Partial<Record<Lifetime, RegistrationMap>> = {
       [Lifetime.Singleton]: this.singletons,
       [Lifetime.Scoped]: this.scoped,
       [Lifetime.Resolve]: this.transient,
