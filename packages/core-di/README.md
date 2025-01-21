@@ -5,24 +5,24 @@
 ## Installation & Quick Start
 
 ```sh
-npm i --save @shellicar/core-di
+pnpm install @shellicar/core-di
 ```
 
-```sh
-pnpm add @shellicar/core-di
-```
+## Quick Example
 
-```ts
-import { createServiceCollection } from '@shellicar/core-di';
+```typescript
+import { Container, injectable } from '@shellicar/core-di';
 
-abstract class IAbstract {}
-class Concrete implements IAbstract {}
+@injectable()
+class Foo {
+  sayHello() {
+    console.log('Hello from Foo');
+  }
+}
 
-const services = createServiceCollection();
-services.register(IAbstract).to(Concrete);
-const provider = services.buildProvider();
-
-const svc = provider.resolve(IAbstract);
+const container = new Container();
+const foo = container.resolve(Foo);
+foo.sayHello();
 ```
 
 ## Documentation

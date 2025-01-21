@@ -1,17 +1,17 @@
 # @shellicar/core-di
 
-A basic dependency injection library for TypeScript
+> A basic dependency injection library for TypeScript
 
 [![npm package](https://img.shields.io/npm/v/@shellicar/core-di.svg)](https://npmjs.com/package/@shellicar/core-di)
 [![build status](https://github.com/shellicar/core-di/actions/workflows/node.js.yml/badge.svg)](https://github.com/shellicar/core-di/actions/workflows/node.js.yml)
 
 ## Features
 
-- 🎯 Type-safe registration and resolution
-- 🏭 Factory method support
-- 🎨 Decorator-based property injection
-- 🔄 Flexible lifetime management
-- 📦 Service modules for organization
+* 🎯 Type-safe registration and resolution
+* 🏭 Factory method support
+* 🎨 Decorator-based property injection
+* 🔄 Flexible lifetime management
+* 📦 Service modules for organization
 
 ## Installation & Quick Start
 
@@ -25,48 +25,22 @@ pnpm add @shellicar/core-di
 
 ```ts
 import { createServiceCollection } from '@shellicar/core-di';
-
 abstract class IAbstract {}
 class Concrete implements IAbstract {}
-
 const services = createServiceCollection();
 services.register(IAbstract).to(Concrete);
 const provider = services.buildProvider();
-
 const svc = provider.resolve(IAbstract);
 ```
 
 <!-- BEGIN_ECOSYSTEM -->
-
-## @shellicar TypeScript Ecosystem
-
-### Core Libraries
-
-- [`@shellicar/core-config`](https://github.com/shellicar/core-config) - A library for securely handling sensitive configuration values like connection strings, URLs, and secrets.
-- [`@shellicar/core-di`](https://github.com/shellicar/core-di) - A basic dependency injection library.
-- [`@shellicar/core-foundation`](https://github.com/shellicar/core-foundation) - A comprehensive starter repository.
-
-### Build Tools
-
-- [`@shellicar/build-version`](https://github.com/shellicar/build-version) - Build plugin that calculates and exposes version information through a virtual module import.
-- [`@shellicar/build-graphql`](https://github.com/shellicar/build-graphql) - Build plugin that loads GraphQL files and makes them available through a virtual module import.
-
-### Framework Adapters
-
-- [`@shellicar/svelte-adapter-azure-functions`](https://github.com/shellicar/svelte-adapter-azure-functions) - A [SvelteKit adapter](https://kit.svelte.dev/docs/adapters) that builds your app into an Azure Function.
-
-### Logging & Monitoring
-
-- [`@shellicar/winston-azure-application-insights`](https://github.com/shellicar/winston-azure-application-insights) - An [Azure Application Insights](https://azure.microsoft.com/en-us/services/application-insights/) transport for [Winston](https://github.com/winstonjs/winston) logging library.
-- [`@shellicar/pino-applicationinsights-transport`](https://github.com/shellicar/pino-applicationinsights-transport) - [Azure Application Insights](https://azure.microsoft.com/en-us/services/application-insights) transport for [pino](https://github.com/pinojs/pino)
-
 <!-- END_ECOSYSTEM -->
 
 ## Motivation
 
-Coming from .NET I am used to DI frameworks/libraries such as [Autofac], [Ninject], [StructureMap], [Unity], and Microsoft's own [DependencyInjection].
+Coming from .NET I am used to DI frameworks/libraries such as `Autofac`, `Ninject`, `StructureMap`, `Unity`, and Microsoft's own `DependencyInjection`.
 
-I started using [InversifyJS], and tried out some others along the way, such as `diod`.
+I started using `InversifyJS`, and tried out some others along the way, such as `diod`.
 
 With TypeScript 5.0 generally available with non-experimental decorators, most DI libraries have not been updated, so I decided to create my own.
 
@@ -76,7 +50,7 @@ My set of features is simple, based on my current usage
 
 See [readme examples](./examples/readme/src) for example source code.
 
-- Type-safe registration.
+* Type-safe registration.
 
 ```ts
 const services = createServiceCollection();
@@ -86,7 +60,7 @@ services.register(IAbstract).to(Concrete);
 //                              ^ Error
 ```
 
-- Type-safe resolution.
+* Type-safe resolution.
 
 ```ts
 const provider = services.buildProvider();
@@ -94,7 +68,7 @@ const svc = provider.resolve(IMyService);
 //    ^ IMyService
 ```
 
-- Provide factory methods for instantiating classes.
+* Provide factory methods for instantiating classes.
 
 ```ts
 services.register(Redis).to(Redis, x => {
@@ -106,7 +80,7 @@ services.register(Redis).to(Redis, x => {
 });
 ```
 
-- Use property injection with decorators for simple dependency definition.
+* Use property injection with decorators for simple dependency definition.
 
 ```ts
 abstract class IDependency {}
@@ -115,14 +89,14 @@ class Service implements IService {
 }
 ```
 
-- Provide multiple implementations for identifiers and provide a `resolveAll` method.
-- Define instance lifetime with simple builder pattern.
+* Provide multiple implementations for identifiers and provide a `resolveAll` method.
+* Define instance lifetime with simple builder pattern.
 
 ```ts
 services.register(IAbstract).to(Concrete).singleton();
 ```
 
-- Create scopes to allow "per-request" lifetimes.
+* Create scopes to allow "per-request" lifetimes.
 
 ```ts
 const services = createServiceCollection();
@@ -130,14 +104,14 @@ const provider = services.buildProvider();
 using scope = provider.createScope();
 ```
 
-- Register classes during a scope
+* Register classes during a scope
 
 ```ts
 using scope = provider.createScope();
 scope.Services.register(IContext).to(Context);
 ```
 
-- Multiple registrations
+* Multiple registrations
 
 ```ts
 services.register(IAbstract1, IAbstract2).to(Concrete).singleton();
@@ -145,7 +119,7 @@ const provider = services.buildProvider();
 provider.resolve(IAbstract1) === provider.resolve(IAbstract2);
 ```
 
-- Override registrations (e.g.: for testing)
+* Override registrations (e.g.: for testing)
 
 ```ts
 import { ok } from 'node:assert/strict';
@@ -158,7 +132,7 @@ const options = provider.resolve(IOptions);
 ok(options instanceof MockOptions);
 ```
 
-- Override lifetimes (e.g.: for testing)
+* Override lifetimes (e.g.: for testing)
 
 ```ts
 const services = createServiceCollection({ logLevel: LogLevel.Debug });
@@ -168,7 +142,7 @@ provider.Services.overrideLifetime(IAbstract, Lifetime.Transient);
 provider.resolve(IAbstract) !== provider.resolve(IAbstract);
 ```
 
-- Logging options
+* Logging options
 
 ```ts
 class CustomLogger extends ILogger {
@@ -182,7 +156,7 @@ const services1 = createServiceCollection({ logger: new CustomLogger() });
 const services2 = createServiceCollection({ logLevel: LogLevel.Debug });
 ```
 
-- Service modules
+* Service modules
 
 ```ts
 class IAbstract {}
@@ -253,12 +227,5 @@ console.log(svc.handle());
 
 ## Credits & Inspiration
 
-- [InversifyJS]
-- [Microsoft.Extensions.DependencyInjection][DependencyInjection]
-
-[Ninject]: https://github.com/ninject/Ninject
-[StructureMap]: https://github.com/structuremap/structuremap
-[Unity]: https://github.com/unitycontainer/unity
-[Autofac]: https://github.com/autofac/Autofac.Extensions.DependencyInjection
-[InversifyJS]: https://github.com/inversify/InversifyJS
-[DependencyInjection]: https://github.com/dotnet/runtime/tree/main/src/libraries/Microsoft.Extensions.DependencyInjection
+* [InversifyJS](https://github.com/inversify/InversifyJS)
+* [Microsoft.Extensions.DependencyInjection](https://github.com/dotnet/runtime/tree/main/src/libraries/Microsoft.Extensions.DependencyInjection)

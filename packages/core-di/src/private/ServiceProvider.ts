@@ -4,19 +4,19 @@ import { MultipleRegistrationError, SelfDependencyError, ServiceCreationError, U
 import { type IDisposable, IResolutionScope, IScopedProvider, type IServiceCollection } from '../interfaces';
 import { IServiceProvider } from '../interfaces';
 import type { ILogger } from '../logger';
-import type { ServiceDescriptor, ServiceIdentifier, ServiceImplementation, SourceType } from '../types';
+import { type ServiceDescriptor, type ServiceIdentifier, type ServiceImplementation, type ServiceRegistration, type SourceType, createRegistrationMap } from '../types';
 import { ResolutionContext } from './ResolutionContext';
 import { DesignDependenciesKey } from './constants';
 import { getMetadata } from './metadata';
 
 export class ServiceProvider implements IServiceProvider, IScopedProvider {
-  private scoped = new Map<ServiceImplementation<any>, any>();
+  private scoped = createRegistrationMap();
   private created: IDisposable[] = [];
 
   constructor(
     private readonly logger: ILogger,
     public readonly Services: IServiceCollection,
-    private readonly singletons = new Map<ServiceImplementation<any>, any>(),
+    private readonly singletons = createRegistrationMap(),
   ) {}
 
   [Symbol.dispose]() {
@@ -97,7 +97,7 @@ export class ServiceProvider implements IServiceProvider, IScopedProvider {
     return new ServiceProvider(this.logger, this.Services.clone(true), this.singletons);
   }
 
-  private setDependencies<T extends SourceType>(implementation: ServiceImplementation<T>, instance: T, context: ResolutionContext): T {
+  private setDependencies<T extends SourceType>(implementation: ServiceRegistration<T>, instance: T, context: ResolutionContext): T {
     const dependencies = getMetadata<T>(DesignDependenciesKey, implementation) ?? {};
     this.logger.debug('Dependencies', implementation.name, dependencies);
     for (const [key, identifier] of Object.entries(dependencies)) {
