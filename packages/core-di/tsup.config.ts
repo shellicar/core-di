@@ -10,6 +10,7 @@ export default defineConfig((config) => ({
   minify: config.watch ? false : 'terser',
   keepNames: true,
   bundle: true,
+  removeNodeProtocol: false,
   tsconfig: 'tsconfig.json',
   inject: ['inject.ts'],
   target: 'node20',

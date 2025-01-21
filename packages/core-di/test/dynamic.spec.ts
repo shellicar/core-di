@@ -15,7 +15,7 @@ class Top implements ITop {
   constructor(public readonly bottom2: IBottom) {}
 }
 
-describe('Works when constructor is inveoked', () => {
+describe('Works when constructor is invoked', () => {
   const services = createServiceCollection();
   services.register(IBottom).to(Bottom);
   services.register(ITop).to(Top, (x) => new Top(x.resolve(IBottom)));

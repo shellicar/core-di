@@ -10,13 +10,14 @@ export type Newable<T> = new (...args: any[]) => T;
 
 export type ServiceIdentifier<T extends SourceType> = { prototype: T; name: string }; //AbstractNewable<T>;
 export type ServiceImplementation<T extends SourceType> = Newable<T>;
+export type ServiceRegistration<T extends SourceType> = ServiceIdentifier<T> | ServiceImplementation<T>;
 
 export type InstanceFactory<T extends SourceType> = (x: IResolutionScope) => T;
 
 export type ServiceModuleType = Newable<IServiceModule>;
 
 export type ServiceDescriptor<T extends SourceType> = {
-  readonly implementation: ServiceImplementation<T>;
+  readonly implementation: ServiceRegistration<T>;
   lifetime: Lifetime;
   createInstance(context: IResolutionScope): T;
 };
@@ -48,5 +49,5 @@ export type EnsureObject<T> = T extends object ? T : never;
 
 export type ServiceBuilderOptions<T extends SourceType> = {
   (implementation: ServiceImplementation<T>): ILifetimeBuilder;
-  (implementation: ServiceImplementation<T>, factory: InstanceFactory<T>): ILifetimeBuilder;
+  (implementation: ServiceIdentifier<T>, factory: InstanceFactory<T>): ILifetimeBuilder;
 };
