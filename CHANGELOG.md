@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.4.0] - 2025-05-18
+
+### Added
+
+- Added null/undefined checks for service registration and implementation
+- Added `InvalidServiceIdentifierError` for null/undefined service identifiers
+- Added `InvalidImplementationError` for null/undefined implementations
+
 ## [2.3.0] - 2025-01-21
 
 ### Fixed
@@ -109,6 +117,7 @@
 
 Initial release.
 
+[2.4.0]: https://github.com/shellicar/core-di/releases/tag/2.4.0
 [2.3.0]: https://github.com/shellicar/core-di/releases/tag/2.3.0
 [2.2.0]: https://github.com/shellicar/core-di/releases/tag/2.2.0
 [2.1.1]: https://github.com/shellicar/core-di/releases/tag/2.1.1
