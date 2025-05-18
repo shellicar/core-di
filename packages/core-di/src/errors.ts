@@ -44,3 +44,11 @@ export class ScopedSingletonRegistrationError extends ServiceError {
     Object.setPrototypeOf(this, new.target.prototype);
   }
 }
+
+export class InvalidServiceIdentifierError extends ServiceError {
+  name = 'InvalidServiceIdentifierError';
+  constructor() {
+    super('Cannot register null or undefined service identifier');
+    Object.setPrototypeOf(this, new.target.prototype);
+  }
+}
