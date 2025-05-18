@@ -5,6 +5,14 @@ import { InvalidImplementationError, createServiceCollection } from '../src';
 abstract class IService {}
 
 describe('To method null/undefined implementation checks', () => {
+  it('throws when passed nothing', () => {
+    const services = createServiceCollection();
+    throws(() => {
+      // @ts-expect-error
+      services.register(IService).to();
+    }, InvalidImplementationError);
+  });
+
   it('throws when passed undefined implementation', () => {
     const services = createServiceCollection();
     throws(() => {
