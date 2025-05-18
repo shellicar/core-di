@@ -4,5 +4,5 @@ export { IDisposable, ILifetimeBuilder, IServiceBuilder, IServiceCollection, ISe
 export type { AbstractNewable, InstanceFactory, MetadataType, Newable, ServiceDescriptor, ServiceIdentifier, ServiceRegistration, ServiceImplementation, ServiceModuleType, SourceType, ServiceCollectionOptions } from './types';
 export { DefaultServiceCollectionOptions } from './defaults';
 export { ILogger } from './logger';
-export { MultipleRegistrationError, SelfDependencyError, ServiceCreationError, UnregisteredServiceError, ServiceError, ScopedSingletonRegistrationError, InvalidServiceIdentifierError } from './errors';
+export { MultipleRegistrationError, SelfDependencyError, ServiceCreationError, UnregisteredServiceError, ServiceError, ScopedSingletonRegistrationError, InvalidServiceIdentifierError, InvalidImplementationError } from './errors';
 export { ResolveMultipleMode, Lifetime, LogLevel } from './enums';

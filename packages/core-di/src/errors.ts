@@ -52,3 +52,11 @@ export class InvalidServiceIdentifierError extends ServiceError {
     Object.setPrototypeOf(this, new.target.prototype);
   }
 }
+
+export class InvalidImplementationError<T extends object> extends ServiceError {
+  name = 'InvalidImplementationError';
+  constructor(identifier: ServiceIdentifier<T> | undefined) {
+    super(`Invalid implementation provided for service: ${identifier?.name ?? 'undefined'}`);
+    Object.setPrototypeOf(this, new.target.prototype);
+  }
+}
