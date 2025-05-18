@@ -31,7 +31,7 @@ export class ServiceCollection implements IServiceCollection {
     }
   }
 
-  register<Types extends SourceType[]>(...identifiers: { [K in keyof Types]: ServiceIdentifier<Types[K]> }): IServiceBuilder<EnsureObject<UnionToIntersection<Types[number]>>> {
+  register<Types extends [SourceType, ...SourceType[]]>(...identifiers: { [K in keyof Types]: ServiceIdentifier<Types[K]> }): IServiceBuilder<EnsureObject<UnionToIntersection<Types[number]>>> {
     if (identifiers.length === 0 || identifiers.some((id) => id == null)) {
       throw new InvalidServiceIdentifierError();
     }

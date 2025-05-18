@@ -49,7 +49,7 @@ export abstract class IServiceCollection {
    * @returns A service builder to configure the implementation and lifetime
    * @throws {InvalidServiceIdentifierError} When any identifier is null or undefined
    */
-  public abstract register<Types extends SourceType[]>(...identifiers: { [K in keyof Types]: ServiceIdentifier<Types[K]> }): IServiceBuilder<EnsureObject<UnionToIntersection<Types[number]>>>;
+  public abstract register<Types extends [SourceType, ...SourceType[]]>(...identifiers: { [K in keyof Types]: ServiceIdentifier<Types[K]> }): IServiceBuilder<EnsureObject<UnionToIntersection<Types[number]>>>;
   public abstract registerModules(...modules: ServiceModuleType[]): void;
   public abstract overrideLifetime<T extends SourceType>(identifier: ServiceIdentifier<T>, lifetime: Lifetime): void;
   public abstract buildProvider(): IServiceProvider;
