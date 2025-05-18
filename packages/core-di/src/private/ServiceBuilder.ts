@@ -1,5 +1,5 @@
 import { Lifetime } from '../enums';
-import { ScopedSingletonRegistrationError } from '../errors';
+import { InvalidImplementationError, ScopedSingletonRegistrationError } from '../errors';
 import type { ILifetimeBuilder, IServiceBuilder } from '../interfaces';
 import type { InstanceFactory, ServiceDescriptor, ServiceIdentifier, ServiceImplementation, ServiceRegistration, SourceType } from '../types';
 
@@ -15,6 +15,10 @@ export class ServiceBuilder<T extends SourceType> implements IServiceBuilder<T> 
   public to(implementation: ServiceImplementation<T>): ILifetimeBuilder;
   public to(implementation: ServiceIdentifier<T>, factory?: InstanceFactory<T>): ILifetimeBuilder;
   public to(implementation: ServiceRegistration<T>, factory?: InstanceFactory<T> | undefined): ILifetimeBuilder {
+    if (implementation == null) {
+      throw new InvalidImplementationError<T>(this.identifiers[0]);
+    }
+
     this.descriptor = this.createDescriptor(factory, implementation);
 
     for (const identifier of this.identifiers) {

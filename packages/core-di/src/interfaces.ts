@@ -43,7 +43,13 @@ export abstract class IServiceProvider extends IResolutionScope {
 export abstract class IServiceCollection {
   public abstract readonly options: ServiceCollectionOptions;
   public abstract get<T extends SourceType>(identifier: ServiceIdentifier<T>): ServiceDescriptor<T>[];
-  public abstract register<Types extends SourceType[]>(...identifiers: { [K in keyof Types]: ServiceIdentifier<Types[K]> }): IServiceBuilder<EnsureObject<UnionToIntersection<Types[number]>>>;
+  /**
+   * Registers one or more service identifiers with the service collection.
+   * @param identifiers One or more service identifiers to register
+   * @returns A service builder to configure the implementation and lifetime
+   * @throws {InvalidServiceIdentifierError} When any identifier is null or undefined
+   */
+  public abstract register<Types extends [SourceType, ...SourceType[]]>(...identifiers: { [K in keyof Types]: ServiceIdentifier<Types[K]> }): IServiceBuilder<EnsureObject<UnionToIntersection<Types[number]>>>;
   public abstract registerModules(...modules: ServiceModuleType[]): void;
   public abstract overrideLifetime<T extends SourceType>(identifier: ServiceIdentifier<T>, lifetime: Lifetime): void;
   public abstract buildProvider(): IServiceProvider;

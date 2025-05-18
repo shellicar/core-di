@@ -1,4 +1,5 @@
 import type { Lifetime } from '../enums';
+import { InvalidServiceIdentifierError } from '../errors';
 import type { IServiceBuilder, IServiceCollection, IServiceProvider } from '../interfaces';
 import type { ILogger } from '../logger';
 import { type DescriptorMap, type EnsureObject, type ServiceCollectionOptions, type ServiceDescriptor, type ServiceIdentifier, type ServiceModuleType, type SourceType, type UnionToIntersection, createDescriptorMap } from '../types';
@@ -30,7 +31,11 @@ export class ServiceCollection implements IServiceCollection {
     }
   }
 
-  register<Types extends SourceType[]>(...identifiers: { [K in keyof Types]: ServiceIdentifier<Types[K]> }): IServiceBuilder<EnsureObject<UnionToIntersection<Types[number]>>> {
+  register<Types extends [SourceType, ...SourceType[]]>(...identifiers: { [K in keyof Types]: ServiceIdentifier<Types[K]> }): IServiceBuilder<EnsureObject<UnionToIntersection<Types[number]>>> {
+    if (identifiers.length === 0 || identifiers.some((id) => id == null)) {
+      throw new InvalidServiceIdentifierError();
+    }
+
     return new ServiceBuilder(identifiers, this.isScoped, (identifier, descriptor) => this.addService(identifier, descriptor));
   }
 
