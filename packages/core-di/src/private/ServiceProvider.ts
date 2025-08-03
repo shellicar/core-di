@@ -25,17 +25,18 @@ export class ServiceProvider implements IServiceProvider, IScopedProvider {
     }
   }
 
-  private resolveInternal<T extends SourceType>(descriptor: ServiceDescriptor<T>, context: ResolutionContext): T {
+  private resolveInternal<T extends SourceType>(descriptor: ServiceDescriptor<T>, context: ResolutionContext, serviceIdentifier?: ServiceIdentifier<T>): T {
     let instance = context.getFromLifetime(descriptor.implementation, descriptor.lifetime);
     if (instance == null) {
-      instance = this.createInstance(descriptor, context);
+      instance = this.createInstance(descriptor, context, serviceIdentifier);
     }
     return instance;
   }
 
   public resolveAll<T extends SourceType>(identifier: ServiceIdentifier<T>, context?: ResolutionContext): T[] {
     const descriptors = this.Services.get(identifier);
-    return descriptors.map((descriptor) => this.resolveInternal<T>(descriptor, context ?? new ResolutionContext(this.singletons, this.scoped)));
+    const resolveContext = context ?? new ResolutionContext(this.singletons, this.scoped, identifier);
+    return descriptors.map((descriptor) => this.resolveInternal<T>(descriptor, resolveContext, identifier));
   }
 
   public resolve<T extends SourceType>(identifier: ServiceIdentifier<T>, context?: ResolutionContext): T {
@@ -44,7 +45,19 @@ export class ServiceProvider implements IServiceProvider, IScopedProvider {
     }
 
     const descriptor = this.getSingleDescriptor(identifier);
-    return this.resolveInternal(descriptor, context ?? new ResolutionContext(this.singletons, this.scoped));
+    const resolveContext = context ?? new ResolutionContext(this.singletons, this.scoped, identifier);
+    try {
+      return this.resolveInternal(descriptor, resolveContext, identifier);
+    } catch (err) {
+      throw this.wrapDependencyResolutionError(err, identifier, descriptor, resolveContext);
+    }
+  }
+
+  private wrapDependencyResolutionError<T extends SourceType>(err: unknown, requestedIdentifier: ServiceIdentifier<T>, descriptor: ServiceDescriptor<T>, context: ResolutionContext): never {
+    if (err instanceof ServiceCreationError && err.identifier !== requestedIdentifier) {
+      throw new ServiceCreationError(requestedIdentifier, err, descriptor.implementation);
+    }
+    throw err;
   }
 
   private getSingleDescriptor<T extends SourceType>(identifier: ServiceIdentifier<T>) {
@@ -62,8 +75,8 @@ export class ServiceProvider implements IServiceProvider, IScopedProvider {
     return descriptor;
   }
 
-  private createInstance<T extends SourceType>(descriptor: ServiceDescriptor<T>, context: ResolutionContext): T {
-    const instance = this.createInstanceInternal(descriptor, context);
+  private createInstance<T extends SourceType>(descriptor: ServiceDescriptor<T>, context: ResolutionContext, serviceIdentifier?: ServiceIdentifier<T>): T {
+    const instance = this.createInstanceInternal(descriptor, context, serviceIdentifier);
     this.setDependencies(descriptor.implementation, instance, context);
     context.setForLifetime(descriptor.implementation, instance, descriptor.lifetime);
     return instance;
@@ -79,13 +92,17 @@ export class ServiceProvider implements IServiceProvider, IScopedProvider {
     };
   }
 
-  private createInstanceInternal<T extends SourceType>(descriptor: ServiceDescriptor<T>, context: ResolutionContext) {
+  private createInstanceInternal<T extends SourceType>(descriptor: ServiceDescriptor<T>, context: ResolutionContext, serviceIdentifier?: ServiceIdentifier<T>) {
     let instance: T | undefined;
     try {
       instance = descriptor.createInstance(this.wrapContext(context));
     } catch (err) {
       this.logger.error(err);
-      throw new ServiceCreationError(descriptor.implementation, err);
+      const identifier = serviceIdentifier || descriptor.implementation;
+      if (err instanceof Error) {
+        throw new ServiceCreationError(identifier, err, descriptor.implementation);
+      }
+      throw new ServiceCreationError(identifier, undefined, descriptor.implementation);
     }
     if (descriptor.lifetime !== Lifetime.Singleton && Symbol.dispose in instance) {
       this.created.push(instance as IDisposable);

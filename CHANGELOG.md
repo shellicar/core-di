@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.5.0] - 2025-08-03
+
+### Added
+
+- Enhanced error handling with better error message formatting showing both service identifier and implementation
+- Support for error chaining in dependency resolution failures
+
+### Changed
+
+- Updated all dependencies to latest versions
+
 ## [2.4.0] - 2025-05-18
 
 ### Added
@@ -117,6 +128,7 @@
 
 Initial release.
 
+[2.5.0]: https://github.com/shellicar/core-di/releases/tag/2.5.0
 [2.4.0]: https://github.com/shellicar/core-di/releases/tag/2.4.0
 [2.3.0]: https://github.com/shellicar/core-di/releases/tag/2.3.0
 [2.2.0]: https://github.com/shellicar/core-di/releases/tag/2.2.0

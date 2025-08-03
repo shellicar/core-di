@@ -1,4 +1,4 @@
-import type { ServiceIdentifier } from './types';
+import type { ServiceIdentifier, ServiceImplementation, ServiceRegistration } from './types';
 
 export abstract class ServiceError extends Error {}
 
@@ -21,11 +21,20 @@ export class MultipleRegistrationError<T extends object> extends ServiceError {
 export class ServiceCreationError<T extends object> extends ServiceError {
   name = 'ServiceCreationError';
   constructor(
-    identifier: ServiceIdentifier<T>,
-    public readonly innerError: any,
+    public readonly identifier: ServiceIdentifier<T>,
+    public readonly innerError?: Error,
+    public readonly implementation?: ServiceRegistration<T>,
   ) {
-    super(`Error creating service: ${identifier.name}`);
+    super(ServiceCreationError.getErrorMessage(identifier.name, implementation?.name, innerError));
     Object.setPrototypeOf(this, new.target.prototype);
+  }
+
+  static getErrorMessage(identifierName: string, implementationName: string | undefined, innerError: Error | undefined): string {
+    const serviceName = implementationName ? `${identifierName} (${implementationName})` : identifierName;
+    if (innerError == null) {
+      return `Error creating service: ${serviceName}`;
+    }
+    return `Error creating service: ${serviceName}\n${innerError.message}`;
   }
 }
 

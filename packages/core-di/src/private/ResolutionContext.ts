@@ -1,10 +1,11 @@
 import { Lifetime } from '../enums';
-import { type RegistrationMap, type ServiceRegistration, type SourceType, createRegistrationMap } from '../types';
+import { type RegistrationMap, type ServiceIdentifier, type ServiceRegistration, type SourceType, createRegistrationMap } from '../types';
 
 export class ResolutionContext {
   constructor(
     private readonly singletons: RegistrationMap,
     private readonly scoped: RegistrationMap,
+    public readonly targetIdentifier?: ServiceIdentifier<any>,
   ) {}
 
   private readonly transient: RegistrationMap = createRegistrationMap();
