@@ -54,7 +54,7 @@ export class ServiceProvider implements IServiceProvider, IScopedProvider {
   }
 
   private wrapDependencyResolutionError<T extends SourceType>(err: unknown, requestedIdentifier: ServiceIdentifier<T>, descriptor: ServiceDescriptor<T>, context: ResolutionContext): never {
-    if (err instanceof ServiceCreationError && err.identifier !== requestedIdentifier && context.targetIdentifier === requestedIdentifier) {
+    if (err instanceof ServiceCreationError && err.identifier !== requestedIdentifier) {
       throw new ServiceCreationError(requestedIdentifier, err, descriptor.implementation);
     }
     throw err;

@@ -2,7 +2,6 @@ import { throws } from 'node:assert/strict';
 import { describe, expect, it } from 'vitest';
 import { ServiceCreationError, createServiceCollection, dependsOn } from '../src';
 
-// Define our test interfaces and classes
 abstract class IConfigOptions {
   abstract getConnectionString(): string;
 }
@@ -17,7 +16,6 @@ abstract class IUserService {
 
 class ConfigOptions implements IConfigOptions {
   constructor() {
-    // Simulate a configuration error, like an environment variable not being set
     throw new Error('Missing required environment variable DATABASE_URL');
   }
 
@@ -31,7 +29,6 @@ class DatabaseService implements IDatabaseService {
 
   connect(): void {
     const connectionString = this.options.getConnectionString();
-    // Connect to database using connection string
   }
 }
 
@@ -39,7 +36,6 @@ class UserService implements IUserService {
   @dependsOn(IDatabaseService) private readonly db!: IDatabaseService;
 
   getUsers(): string[] {
-    // Use db to get users
     return ['user1', 'user2'];
   }
 }
@@ -68,7 +64,6 @@ describe('Dependency Resolution Error Handling', () => {
         if (err.innerError instanceof ServiceCreationError) {
           const inner = err.innerError;
           console.log('inner', inner);
-          // Should eventually lead to ConfigOptions failing
           return true;
         }
       }
@@ -79,7 +74,6 @@ describe('Dependency Resolution Error Handling', () => {
   it('does not wrap ServiceCreationError when it already identifies the requested service', () => {
     const services = createServiceCollection();
 
-    // Create a service that directly fails (no dependency chain)
     abstract class IDirectFailingService {
       abstract doSomething(): void;
     }
@@ -100,11 +94,9 @@ describe('Dependency Resolution Error Handling', () => {
       throw new Error('Expected resolution to fail');
     } catch (err) {
       if (err instanceof ServiceCreationError) {
-        // The error should identify IDirectFailingService (what we requested)
         expect(err.identifier).toBe(IDirectFailingService);
         expect(err.implementation).toBe(DirectFailingService);
 
-        // There should be NO inner error since this is a direct failure, not a dependency chain issue
         expect(err.innerError).toBeInstanceOf(Error);
         expect(err.innerError).not.toBeInstanceOf(ServiceCreationError);
         expect(err.innerError?.message).toBe('Direct service failure');
@@ -117,7 +109,6 @@ describe('Dependency Resolution Error Handling', () => {
   it('preserves full error chain in deep dependency hierarchy', () => {
     const services = createServiceCollection();
 
-    // Create a 5-level deep dependency chain
     abstract class ILevel5 {
       abstract method5(): string;
     }
@@ -171,7 +162,6 @@ describe('Dependency Resolution Error Handling', () => {
       }
     }
 
-    // Register all services
     services.register(ILevel5).to(Level5);
     services.register(ILevel4).to(Level4);
     services.register(ILevel3).to(Level3);
@@ -185,25 +175,31 @@ describe('Dependency Resolution Error Handling', () => {
       throw new Error('Expected resolution to fail');
     } catch (err) {
       if (err instanceof ServiceCreationError) {
-        // The outermost error should be for ILevel1 (what we're trying to resolve)
-        expect(err.identifier).toBe(ILevel1);
+        const expectedErrorChain = [
+          { identifier: ILevel1, implementation: Level1 },
+          { identifier: ILevel2, implementation: Level2 },
+          { identifier: ILevel3, implementation: Level3 },
+          { identifier: ILevel4, implementation: Level4 },
+          { identifier: ILevel5, implementation: Level5 },
+        ];
 
-        // The innermost error should contain the original failure message
         let currentError = err;
-        let depth = 0;
-        while (currentError.innerError instanceof ServiceCreationError && depth < 10) {
-          currentError = currentError.innerError;
-          depth++;
+        for (let i = 0; i < expectedErrorChain.length; i++) {
+          const expected = expectedErrorChain[i];
+          expect(currentError).toBeInstanceOf(ServiceCreationError);
+          expect(currentError.identifier).toBe(expected.identifier);
+          expect(currentError.implementation).toBe(expected.implementation);
+
+          if (i === expectedErrorChain.length - 1) {
+            expect(currentError.innerError).toBeInstanceOf(Error);
+            expect(currentError.innerError).not.toBeInstanceOf(ServiceCreationError);
+            expect(currentError.message).toContain('Level5 configuration failed');
+            expect(currentError.message).toContain('ILevel5 (Level5)');
+          } else {
+            expect(currentError.innerError).toBeInstanceOf(ServiceCreationError);
+            currentError = currentError.innerError as ServiceCreationError<any>;
+          }
         }
-
-        // The leaf error should have the service identifier and implementation class
-        expect(currentError.identifier).toBe(ILevel5);
-        expect(currentError.implementation).toBe(Level5);
-        expect(currentError.message).toContain('Level5 configuration failed');
-        expect(currentError.message).toContain('ILevel5 (Level5)'); // Should show both interface and implementation
-
-        // Verify we have the expected depth
-        expect(depth).toBeGreaterThan(0);
         return;
       }
       throw new Error('Expected ServiceCreationError');
