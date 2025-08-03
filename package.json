@@ -1,6 +1,6 @@
 {
   "private": true,
-  "packageManager": "pnpm@9.15.4",
+  "packageManager": "pnpm@10.14.0+sha512.ad27a79641b49c3e481a16a805baa71817a04bbe06a38d17e60e2eaee83f6a146c6a688125f5792e48dd5ba30e7da52a5cda4c3992b9ccf333f9ce223af84748",
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
@@ -19,10 +19,10 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
-    "lefthook": "^1.10.9",
-    "npm-check-updates": "^17.1.14",
-    "syncpack": "^13.0.0",
-    "turbo": "^2.3.3"
+    "lefthook": "^1.12.2",
+    "npm-check-updates": "^18.0.2",
+    "syncpack": "^13.0.4",
+    "turbo": "^2.5.5"
   },
   "pnpm": {
     "overrides": {
