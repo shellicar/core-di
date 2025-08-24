@@ -1,4 +1,4 @@
-import { ILogger, LogLevel, createServiceCollection } from '@shellicar/core-di';
+import { createServiceCollection, ILogger, LogLevel } from '@shellicar/core-di';
 
 class CustomLogger extends ILogger {
   public override debug(message?: any, ...optionalParams: any[]): void {

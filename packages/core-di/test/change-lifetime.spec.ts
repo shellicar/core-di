@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { Lifetime, LogLevel, createServiceCollection } from '../src';
+import { createServiceCollection, Lifetime, LogLevel } from '../src';
 
 abstract class IAbstract {
   public abstract func1(): void;

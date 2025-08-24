@@ -1,6 +1,6 @@
 import { Clock } from '@js-joda/core';
 import { describe, expect, it } from 'vitest';
-import { LogLevel, createServiceCollection } from '../src';
+import { createServiceCollection, LogLevel } from '../src';
 
 describe('Clock registrations', () => {
   const services = createServiceCollection({ logLevel: LogLevel.Debug });

@@ -1,6 +1,6 @@
 import { ok } from 'node:assert/strict';
 import { describe, it } from 'vitest';
-import { type IServiceCollection, IServiceModule, createServiceCollection } from '../src';
+import { createServiceCollection, type IServiceCollection, IServiceModule } from '../src';
 
 class IAbstract {}
 class Concrete extends IAbstract {}

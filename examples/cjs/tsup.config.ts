@@ -1,17 +1,19 @@
+import cleanPlugin from '@shellicar/build-clean/esbuild';
 import { defineConfig } from 'tsup';
 
 export default defineConfig((config) => ({
-  entry: ['src/main.ts'],
-  splitting: true,
-  sourcemap: false,
-  treeshake: true,
-  dts: false,
-  clean: true,
-  minify: false,
-  keepNames: true,
   bundle: true,
-  tsconfig: 'tsconfig.json',
-  target: 'node20',
+  clean: false,
+  dts: false,
+  entry: ['src/main.ts'],
+  esbuildPlugins: [cleanPlugin({ destructive: true })],
   format: ['cjs'],
+  keepNames: true,
+  minify: false,
   outDir: 'dist',
+  sourcemap: false,
+  splitting: true,
+  target: 'node22',
+  treeshake: true,
+  tsconfig: 'tsconfig.json',
 }));

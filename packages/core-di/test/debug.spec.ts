@@ -1,6 +1,6 @@
 import { equal, throws } from 'node:assert/strict';
 import { describe, it } from 'vitest';
-import { type ILogger, createServiceCollection } from '../src';
+import { createServiceCollection, type ILogger } from '../src';
 
 abstract class IAbstract {}
 class Concrete implements IAbstract {}
