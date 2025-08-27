@@ -1,6 +1,6 @@
 import { createServiceCollection } from '@shellicar/core-di';
-import { MyModule } from './MyModule.js';
 import { IMyOtherService } from './interfaces.js';
+import { MyModule } from './MyModule.js';
 
 const services = createServiceCollection();
 services.registerModules(MyModule);

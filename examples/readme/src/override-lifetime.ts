@@ -1,5 +1,5 @@
 import { ok } from 'node:assert/strict';
-import { Lifetime, LogLevel, createServiceCollection } from '@shellicar/core-di';
+import { createServiceCollection, Lifetime, LogLevel } from '@shellicar/core-di';
 import { Concrete, IAbstract } from './helpers/examples';
 
 const services = createServiceCollection({ logLevel: LogLevel.Debug });

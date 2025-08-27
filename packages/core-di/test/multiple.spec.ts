@@ -1,6 +1,6 @@
 import { equal } from 'node:assert/strict';
 import { describe, it } from 'vitest';
-import { IScopedProvider, createServiceCollection, dependsOn } from '../src';
+import { createServiceCollection, dependsOn, IScopedProvider } from '../src';
 
 abstract class ICheckHealth {
   abstract check(): Promise<boolean>;

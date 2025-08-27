@@ -1,4 +1,5 @@
 import { createServiceCollection } from '@shellicar/core-di';
+
 const services = createServiceCollection();
 
 const provider = services.buildProvider();

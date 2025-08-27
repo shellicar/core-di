@@ -1,6 +1,6 @@
 import { throws } from 'node:assert/strict';
 import { describe, it } from 'vitest';
-import { InvalidImplementationError, createServiceCollection } from '../src';
+import { createServiceCollection, InvalidImplementationError } from '../src';
 
 abstract class IService {}
 

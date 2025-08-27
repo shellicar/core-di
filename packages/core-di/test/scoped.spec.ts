@@ -1,5 +1,4 @@
-import { throws } from 'node:assert/strict';
-import { equal, notEqual } from 'node:assert/strict';
+import { equal, notEqual, throws } from 'node:assert/strict';
 import { describe, it } from 'vitest';
 import { createServiceCollection } from '../src';
 import { ScopedSingletonRegistrationError } from '../src/errors';

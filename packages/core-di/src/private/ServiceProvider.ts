@@ -1,13 +1,11 @@
-import { Lifetime } from '../enums';
-import { ResolveMultipleMode } from '../enums';
+import { Lifetime, ResolveMultipleMode } from '../enums';
 import { MultipleRegistrationError, SelfDependencyError, ServiceCreationError, UnregisteredServiceError } from '../errors';
-import { type IDisposable, IResolutionScope, IScopedProvider, type IServiceCollection } from '../interfaces';
-import { IServiceProvider } from '../interfaces';
+import { type IDisposable, IResolutionScope, IScopedProvider, type IServiceCollection, IServiceProvider } from '../interfaces';
 import type { ILogger } from '../logger';
-import { type ServiceDescriptor, type ServiceIdentifier, type ServiceImplementation, type ServiceRegistration, type SourceType, createRegistrationMap } from '../types';
-import { ResolutionContext } from './ResolutionContext';
+import { createRegistrationMap, type ServiceDescriptor, type ServiceIdentifier, type ServiceImplementation, type ServiceRegistration, type SourceType } from '../types';
 import { DesignDependenciesKey } from './constants';
 import { getMetadata } from './metadata';
+import { ResolutionContext } from './ResolutionContext';
 
 export class ServiceProvider implements IServiceProvider, IScopedProvider {
   private scoped = createRegistrationMap();

@@ -1,8 +1,6 @@
-import { fail } from 'node:assert/strict';
-import { throws } from 'node:assert/strict';
-import { ok } from 'node:assert/strict';
+import { fail, ok, throws } from 'node:assert/strict';
 import { describe, it } from 'vitest';
-import { ResolveMultipleMode, createServiceCollection } from '../src';
+import { createServiceCollection, ResolveMultipleMode } from '../src';
 import { MultipleRegistrationError, ServiceError, UnregisteredServiceError } from '../src/errors';
 
 abstract class IService {}

@@ -1,6 +1,6 @@
 import { equal, ok } from 'node:assert/strict';
 import { describe, it } from 'vitest';
-import { type IDisposable, createServiceCollection } from '../src';
+import { createServiceCollection, type IDisposable } from '../src';
 
 abstract class IAbstract {
   abstract get disposed(): boolean;

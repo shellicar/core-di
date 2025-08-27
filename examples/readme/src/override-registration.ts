@@ -1,5 +1,5 @@
 import { ok } from 'node:assert/strict';
-import { type IServiceCollection, ResolveMultipleMode, createServiceCollection } from '@shellicar/core-di';
+import { createServiceCollection, type IServiceCollection, ResolveMultipleMode } from '@shellicar/core-di';
 
 abstract class IOptions {
   abstract connectionString(): string;

@@ -2,7 +2,7 @@ import type { Lifetime } from '../enums';
 import { InvalidServiceIdentifierError } from '../errors';
 import type { IServiceBuilder, IServiceCollection, IServiceProvider } from '../interfaces';
 import type { ILogger } from '../logger';
-import { type DescriptorMap, type EnsureObject, type ServiceCollectionOptions, type ServiceDescriptor, type ServiceIdentifier, type ServiceModuleType, type SourceType, type UnionToIntersection, createDescriptorMap } from '../types';
+import { createDescriptorMap, type DescriptorMap, type EnsureObject, type ServiceCollectionOptions, type ServiceDescriptor, type ServiceIdentifier, type ServiceModuleType, type SourceType, type UnionToIntersection } from '../types';
 import { ServiceBuilder } from './ServiceBuilder';
 import { ServiceProvider } from './ServiceProvider';
 

@@ -1,4 +1,4 @@
-import { type IServiceCollection, type IServiceModule, createServiceCollection } from '@shellicar/core-di';
+import { createServiceCollection, type IServiceCollection, type IServiceModule } from '@shellicar/core-di';
 import { Concrete, IAbstract } from './helpers/examples';
 
 const services = createServiceCollection();

@@ -1,8 +1,8 @@
 export { createServiceCollection } from './createServiceCollection';
-export { dependsOn } from './dependsOn';
-export { IDisposable, ILifetimeBuilder, IServiceBuilder, IServiceCollection, IServiceModule, IServiceProvider, IResolutionScope, IScopedProvider } from './interfaces';
-export type { AbstractNewable, InstanceFactory, MetadataType, Newable, ServiceDescriptor, ServiceIdentifier, ServiceRegistration, ServiceImplementation, ServiceModuleType, SourceType, ServiceCollectionOptions } from './types';
 export { DefaultServiceCollectionOptions } from './defaults';
+export { dependsOn } from './dependsOn';
+export { Lifetime, LogLevel, ResolveMultipleMode } from './enums';
+export { InvalidImplementationError, InvalidServiceIdentifierError, MultipleRegistrationError, ScopedSingletonRegistrationError, SelfDependencyError, ServiceCreationError, ServiceError, UnregisteredServiceError } from './errors';
+export { IDisposable, ILifetimeBuilder, IResolutionScope, IScopedProvider, IServiceBuilder, IServiceCollection, IServiceModule, IServiceProvider } from './interfaces';
 export { ILogger } from './logger';
-export { MultipleRegistrationError, SelfDependencyError, ServiceCreationError, UnregisteredServiceError, ServiceError, ScopedSingletonRegistrationError, InvalidServiceIdentifierError, InvalidImplementationError } from './errors';
-export { ResolveMultipleMode, Lifetime, LogLevel } from './enums';
+export type { AbstractNewable, InstanceFactory, MetadataType, Newable, ServiceCollectionOptions, ServiceDescriptor, ServiceIdentifier, ServiceImplementation, ServiceModuleType, ServiceRegistration, SourceType } from './types';
