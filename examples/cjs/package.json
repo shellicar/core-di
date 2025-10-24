@@ -9,11 +9,11 @@
     "type-check": "tsc -p tsconfig.check.json"
   },
   "devDependencies": {
-    "@shellicar/build-clean": "1.0.0-preview.5",
+    "@shellicar/build-clean": "^1.1.2",
     "@shellicar/core-di": "workspace:^",
     "@tsconfig/node20": "^20.1.6",
-    "@types/node": "^24.3.0",
+    "@types/node": "^24.9.1",
     "tsup": "^8.5.0",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.3"
   }
 }
