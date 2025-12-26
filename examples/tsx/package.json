@@ -8,9 +8,9 @@
   },
   "devDependencies": {
     "@shellicar/core-di": "workspace:^",
-    "@tsconfig/node20": "^20.1.6",
-    "@types/node": "^24.9.1",
-    "tsx": "^4.20.6",
+    "@tsconfig/node20": "^20.1.8",
+    "@types/node": "^25.0.3",
+    "tsx": "^4.21.0",
     "typescript": "^5.9.3"
   }
 }
