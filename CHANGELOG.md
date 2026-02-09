@@ -1,5 +1,17 @@
 # Changelog
 
+## [3.1.3] - 2026-02-09
+
+### Security
+
+- Fixed [CVE-2026-25547](https://github.com/advisories/GHSA-7h2j-956f-4vf2) in @isaacs/brace-expansion
+
+### Changed
+
+- Moved pnpm overrides from package.json to pnpm-workspace.yaml
+- Updated @shellicar/build-clean to 1.2.2, biome to 2.3.14
+- Updated all dependencies to latest versions
+
 ## [3.1.2] - 2025-12-26
 
 ### Changed
@@ -146,6 +158,7 @@
 
 Initial release.
 
+[3.1.3]: https://github.com/shellicar/core-di/releases/tag/3.1.3
 [3.1.2]: https://github.com/shellicar/core-di/releases/tag/3.1.2
 [3.1.1]: https://github.com/shellicar/core-di/releases/tag/3.1.1
 [3.1.0]: https://github.com/shellicar/core-di/releases/tag/3.1.0
