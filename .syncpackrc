@@ -1,6 +1,10 @@
 {
-  "dependencyTypes": ["dev", "prod", "peer"], 
   "versionGroups": [
+    {
+      "label": "Ignore everything except dependencies, devDependencies, and peerDependencies",
+      "dependencyTypes": ["!prod", "!dev", "!peer"],
+      "isIgnored": true
+    },
     {
       "label": "Use workspace protocol when developing local packages",
       "dependencies": ["$LOCAL"],

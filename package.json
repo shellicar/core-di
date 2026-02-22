@@ -12,8 +12,8 @@
     "check": "biome check",
     "ci": "biome ci --diagnostic-level=error",
     "ci:fix": "biome check --diagnostic-level=error --fix",
-    "list-mismatches": "syncpack list-mismatches",
-    "fix-mismatches": "syncpack fix-mismatches",
+    "list-mismatches": "syncpack lint",
+    "fix-mismatches": "syncpack fix",
     "updates": "npm-check-updates --workspaces",
     "verify-version": "./scripts/verify-version.sh"
   },
@@ -21,7 +21,7 @@
     "@biomejs/biome": "^2.3.14",
     "lefthook": "^2.1.0",
     "npm-check-updates": "^19.3.2",
-    "syncpack": "^13.0.4",
+    "syncpack": "^14.0.0",
     "turbo": "^2.8.3"
   }
 }
