@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { createServiceCollection, dependsOn, SelfDependencyError } from '../src';
-import { CircularDependencyError } from '../src/errors';
+import { CircularDependencyError, createServiceCollection, dependsOn, SelfDependencyError } from '../src';
 
 // Self-dependency: A depends on A (via interface)
 abstract class ISelfDependent {
