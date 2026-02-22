@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.1.5] - 2026-02-23
+
+### Fixed
+
+- Fixed singleton disposal — root provider now disposes singleton `IDisposable` instances when disposed, matching MS DI behaviour
+- Added `IDisposable` implementation to `IServiceProvider` interface
+
 ## [3.1.4] - 2026-02-22
 
 ### Fixed
@@ -169,6 +176,7 @@
 
 Initial release.
 
+[3.1.5]: https://github.com/shellicar/core-di/releases/tag/3.1.5
 [3.1.4]: https://github.com/shellicar/core-di/releases/tag/3.1.4
 [3.1.3]: https://github.com/shellicar/core-di/releases/tag/3.1.3
 [3.1.2]: https://github.com/shellicar/core-di/releases/tag/3.1.2
