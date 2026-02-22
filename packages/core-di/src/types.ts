@@ -55,10 +55,10 @@ export type ServiceBuilderOptions<T extends SourceType> = {
 export type RegistrationMap<T extends SourceType = any> = Map<ServiceRegistration<T>, T>;
 export type DescriptorMap<T extends SourceType = any> = Map<ServiceIdentifier<T>, ServiceDescriptor<T>[]>;
 
-export const createRegistrationMap = <T extends SourceType = any>() => {
+export const createRegistrationMap = <T extends SourceType = any>(): RegistrationMap<T> => {
   return new Map<ServiceRegistration<T>, T>();
 };
 
-export const createDescriptorMap = <T extends SourceType = any>() => {
+export const createDescriptorMap = <T extends SourceType = any>(): DescriptorMap<T> => {
   return new Map<ServiceIdentifier<T>, ServiceDescriptor<T>[]>();
 };
