@@ -1,5 +1,16 @@
 # Changelog
 
+## [3.1.4] - 2026-02-22
+
+### Fixed
+
+- Fixed circular dependency detection — all circular dependencies now throw `CircularDependencyError` instead of silently stack overflowing
+- Fixed self-dependency check that was unreachable due to comparing abstract class against concrete class
+
+### Added
+
+- New `CircularDependencyError` exported error class
+
 ## [3.1.3] - 2026-02-09
 
 ### Security
@@ -158,6 +169,7 @@
 
 Initial release.
 
+[3.1.4]: https://github.com/shellicar/core-di/releases/tag/3.1.4
 [3.1.3]: https://github.com/shellicar/core-di/releases/tag/3.1.3
 [3.1.2]: https://github.com/shellicar/core-di/releases/tag/3.1.2
 [3.1.1]: https://github.com/shellicar/core-di/releases/tag/3.1.1
