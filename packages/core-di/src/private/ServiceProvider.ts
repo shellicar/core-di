@@ -1,5 +1,5 @@
 import { Lifetime, ResolveMultipleMode } from '../enums';
-import { MultipleRegistrationError, SelfDependencyError, ServiceCreationError, UnregisteredServiceError } from '../errors';
+import { CircularDependencyError, MultipleRegistrationError, SelfDependencyError, ServiceCreationError, UnregisteredServiceError } from '../errors';
 import { type IDisposable, IResolutionScope, IScopedProvider, type IServiceCollection, IServiceProvider } from '../interfaces';
 import type { ILogger } from '../logger';
 import { createRegistrationMap, type ServiceDescriptor, type ServiceIdentifier, type ServiceImplementation, type ServiceRegistration, type SourceType } from '../types';
@@ -24,11 +24,19 @@ export class ServiceProvider implements IServiceProvider, IScopedProvider {
   }
 
   private resolveInternal<T extends SourceType>(descriptor: ServiceDescriptor<T>, context: ResolutionContext, serviceIdentifier?: ServiceIdentifier<T>): T {
-    let instance = context.getFromLifetime(descriptor.implementation, descriptor.lifetime);
-    if (instance == null) {
-      instance = this.createInstance(descriptor, context, serviceIdentifier);
+    const existing = context.getFromLifetime(descriptor.implementation, descriptor.lifetime);
+    if (existing != null) {
+      return existing;
     }
-    return instance;
+    const identifier = serviceIdentifier || descriptor.implementation;
+    if (!context.markResolving(descriptor.implementation)) {
+      throw new CircularDependencyError(identifier);
+    }
+    try {
+      return this.createInstance(descriptor, context, serviceIdentifier);
+    } finally {
+      context.unmarkResolving(descriptor.implementation);
+    }
   }
 
   public resolveAll<T extends SourceType>(identifier: ServiceIdentifier<T>, context?: ResolutionContext): T[] {
@@ -75,7 +83,7 @@ export class ServiceProvider implements IServiceProvider, IScopedProvider {
 
   private createInstance<T extends SourceType>(descriptor: ServiceDescriptor<T>, context: ResolutionContext, serviceIdentifier?: ServiceIdentifier<T>): T {
     const instance = this.createInstanceInternal(descriptor, context, serviceIdentifier);
-    this.setDependencies(descriptor.implementation, instance, context);
+    this.setDependencies(descriptor.implementation, instance, context, serviceIdentifier);
     context.setForLifetime(descriptor.implementation, instance, descriptor.lifetime);
     return instance;
   }
@@ -112,17 +120,16 @@ export class ServiceProvider implements IServiceProvider, IScopedProvider {
     return new ServiceProvider(this.logger, this.Services.clone(true), this.singletons);
   }
 
-  private setDependencies<T extends SourceType>(implementation: ServiceRegistration<T>, instance: T, context: ResolutionContext): T {
+  private setDependencies<T extends SourceType>(implementation: ServiceRegistration<T>, instance: T, context: ResolutionContext, serviceIdentifier?: ServiceIdentifier<T>): T {
     const dependencies = getMetadata<T>(DesignDependenciesKey, implementation) ?? {};
     this.logger.debug('Dependencies', implementation.name, dependencies);
     for (const [key, identifier] of Object.entries(dependencies)) {
-      if (identifier !== implementation) {
-        this.logger.debug('Resolving', identifier.name, 'for', implementation.name);
-        const dep = this.resolve(identifier, context);
-        (instance as Record<string, T>)[key] = dep;
-      } else {
+      if (identifier === serviceIdentifier) {
         throw new SelfDependencyError();
       }
+      this.logger.debug('Resolving', identifier.name, 'for', implementation.name);
+      const dep = this.resolve(identifier, context);
+      (instance as Record<string, T>)[key] = dep;
     }
     return instance;
   }

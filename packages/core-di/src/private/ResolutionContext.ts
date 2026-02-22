@@ -9,6 +9,19 @@ export class ResolutionContext {
   ) {}
 
   private readonly transient: RegistrationMap = createRegistrationMap();
+  private readonly resolving = new Set<ServiceRegistration<SourceType>>();
+
+  public markResolving<T extends SourceType>(implementation: ServiceRegistration<T>): boolean {
+    if (this.resolving.has(implementation)) {
+      return false;
+    }
+    this.resolving.add(implementation);
+    return true;
+  }
+
+  public unmarkResolving<T extends SourceType>(implementation: ServiceRegistration<T>): void {
+    this.resolving.delete(implementation);
+  }
 
   public getFromLifetime<T extends SourceType>(implementation: ServiceRegistration<T>, lifetime: Lifetime): T | null {
     const map = this.getMapForLifetime(lifetime);

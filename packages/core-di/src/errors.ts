@@ -46,6 +46,14 @@ export class SelfDependencyError extends ServiceError {
   }
 }
 
+export class CircularDependencyError extends ServiceError {
+  name = 'CircularDependencyError';
+  constructor(identifier: ServiceIdentifier<object>) {
+    super(`Circular dependency detected while resolving: ${identifier.name}`);
+    Object.setPrototypeOf(this, new.target.prototype);
+  }
+}
+
 export class ScopedSingletonRegistrationError extends ServiceError {
   name = 'ScopedSingletonRegistrationError';
   constructor() {
