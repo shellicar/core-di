@@ -26,3 +26,5 @@ import './override-lifetime';
 import './logging-options';
 // * Service modules
 import './service-modules';
+// * Circular dependency detection
+import './circular-dependency';
