@@ -16,20 +16,9 @@ Each item is scored 1-5 on two axes, then combined:
 
 ## Items
 
-### 1. Circular dependency unit tests — Priority: 5
+### ~~1. Circular dependency detection — Done (v3.1.4)~~
 
-| Value | Cost | Priority |
-|-------|------|----------|
-| 5     | 1    | 5        |
-
-Add unit tests to verify and document current circular reference behaviour across all lifetimes. No code changes needed — just tests that pin down existing behaviour.
-
-**Current behaviour:**
-- **Self-dependency** (A→A): Detected, throws `SelfDependencyError`
-- **Indirect cycles** (A→B→A) with `Resolve`/`Singleton`/`Scoped` lifetimes: `ResolutionContext` cache returns the partially-constructed instance, preventing infinite recursion (but the dependent gets an incomplete instance)
-- **Indirect cycles with `Transient` lifetime**: No protection — will stack overflow, as `Transient` has no cache map
-
-**Action:** Write tests, confirm behaviour, then decide if any of it needs fixing.
+Fixed in v3.1.4. All circular dependencies now throw `CircularDependencyError`. Self-dependency check fixed to correctly throw `SelfDependencyError`. 7 tests added covering self-dependency, 2-node cycles, and 3-node cycles across all lifetimes.
 
 ### 2. Routine dependency updates — Priority: 5
 

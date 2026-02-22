@@ -12,6 +12,7 @@
 * 🎨 Decorator-based property injection
 * 🔄 Flexible lifetime management
 * 📦 Service modules for organization
+* 🔍 Circular dependency detection at resolution time
 * 🚨 Clear error messages with dependency chain tracking
 
 ## Installation & Quick Start
