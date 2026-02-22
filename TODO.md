@@ -20,16 +20,9 @@ Each item is scored 1-5 on two axes, then combined:
 
 Fixed in v3.1.4. All circular dependencies now throw `CircularDependencyError`. Self-dependency check fixed to correctly throw `SelfDependencyError`. 7 tests added covering self-dependency, 2-node cycles, and 3-node cycles across all lifetimes.
 
-### 2. Routine dependency updates — Priority: 5
+### ~~2. Routine dependency updates — Done~~
 
-| Value | Cost | Priority |
-|-------|------|----------|
-| 5     | 1    | 5        |
-
-- `syncpack` 13→14 (resolves minimatch ReDoS CVE, dev-only)
-- `@biomejs/biome`, `turbo`, `@types/node`, `npm-check-updates`, `lefthook` — minor/patch updates
-
-Pure hygiene. Clears the audit CVE. No design decisions.
+Syncpack 13→14 completed in PR #20, resolving minimatch ReDoS CVE (CVE-2026-26996). Remaining minor/patch updates (`@biomejs/biome`, `turbo`, `@types/node`, `npm-check-updates`, `lefthook`) can be done in a future maintenance pass.
 
 ### 3. Singleton disposal verification — Priority: 4
 
