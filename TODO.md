@@ -24,13 +24,9 @@ Fixed in v3.1.4. All circular dependencies now throw `CircularDependencyError`. 
 
 Syncpack 13→14 completed in PR #20, resolving minimatch ReDoS CVE (CVE-2026-26996). Remaining minor/patch updates (`@biomejs/biome`, `turbo`, `@types/node`, `npm-check-updates`, `lefthook`) can be done in a future maintenance pass.
 
-### 3. Singleton disposal verification — Priority: 4
+### ~~3. Singleton disposal — Done~~
 
-| Value | Cost | Priority |
-|-------|------|----------|
-| 4     | 1    | 4        |
-
-Currently `Transient` and `Scoped` `IDisposable` instances are tracked and disposed when the provider/scope is disposed. Singleton instances are **not** disposed (see `ServiceProvider.ts:105`). This mirrors MS DI behaviour where singleton disposal is the responsibility of the root container's disposal. Write a test or two to confirm, then document the expected lifecycle.
+Fixed: root provider now disposes singleton `IDisposable` instances when disposed, matching MS DI behaviour. Scoped providers still correctly skip singleton disposal. 4 tests added covering singleton, scoped, and transient disposal lifecycle.
 
 ### 4. Separate resolution graph from resolution — Priority: 1.5
 

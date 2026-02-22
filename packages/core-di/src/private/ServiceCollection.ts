@@ -60,6 +60,6 @@ export class ServiceCollection implements IServiceCollection {
   }
 
   public buildProvider(): IServiceProvider {
-    return new ServiceProvider(this.logger, this.clone());
+    return ServiceProvider.createRoot(this.logger, this.clone());
   }
 }

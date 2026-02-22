@@ -2,7 +2,7 @@ import { Lifetime, ResolveMultipleMode } from '../enums';
 import { CircularDependencyError, MultipleRegistrationError, SelfDependencyError, ServiceCreationError, UnregisteredServiceError } from '../errors';
 import { type IDisposable, IResolutionScope, IScopedProvider, type IServiceCollection, IServiceProvider } from '../interfaces';
 import type { ILogger } from '../logger';
-import { createRegistrationMap, type ServiceDescriptor, type ServiceIdentifier, type ServiceImplementation, type ServiceRegistration, type SourceType } from '../types';
+import { createRegistrationMap, type RegistrationMap, type ServiceDescriptor, type ServiceIdentifier, type ServiceImplementation, type ServiceRegistration, type SourceType } from '../types';
 import { DesignDependenciesKey } from './constants';
 import { getMetadata } from './metadata';
 import { ResolutionContext } from './ResolutionContext';
@@ -11,15 +11,26 @@ export class ServiceProvider implements IServiceProvider, IScopedProvider {
   private scoped = createRegistrationMap();
   private created: IDisposable[] = [];
 
-  constructor(
+  private constructor(
     private readonly logger: ILogger,
     public readonly Services: IServiceCollection,
-    private readonly singletons = createRegistrationMap(),
+    private readonly singletons: RegistrationMap<any>,
+    private readonly singletonDisposables: IDisposable[],
+    private readonly isRoot: boolean,
   ) {}
+
+  public static createRoot(logger: ILogger, services: IServiceCollection): IServiceProvider {
+    return new ServiceProvider(logger, services, createRegistrationMap(), [], true);
+  }
 
   [Symbol.dispose]() {
     for (const x of this.created) {
       x[Symbol.dispose]();
+    }
+    if (this.isRoot) {
+      for (const x of this.singletonDisposables) {
+        x[Symbol.dispose]();
+      }
     }
   }
 
@@ -110,14 +121,18 @@ export class ServiceProvider implements IServiceProvider, IScopedProvider {
       }
       throw new ServiceCreationError(identifier, undefined, descriptor.implementation);
     }
-    if (descriptor.lifetime !== Lifetime.Singleton && Symbol.dispose in instance) {
-      this.created.push(instance as IDisposable);
+    if (Symbol.dispose in instance) {
+      if (descriptor.lifetime === Lifetime.Singleton) {
+        this.singletonDisposables.push(instance as IDisposable);
+      } else {
+        this.created.push(instance as IDisposable);
+      }
     }
     return instance;
   }
 
   public createScope(): IScopedProvider {
-    return new ServiceProvider(this.logger, this.Services.clone(true), this.singletons);
+    return new ServiceProvider(this.logger, this.Services.clone(true), this.singletons, this.singletonDisposables, false);
   }
 
   private setDependencies<T extends SourceType>(implementation: ServiceRegistration<T>, instance: T, context: ResolutionContext, serviceIdentifier?: ServiceIdentifier<T>): T {

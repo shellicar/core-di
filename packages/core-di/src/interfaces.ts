@@ -35,9 +35,10 @@ export abstract class IScopedProvider extends IResolutionScope implements IDispo
   public abstract [Symbol.dispose](): void;
 }
 
-export abstract class IServiceProvider extends IResolutionScope {
+export abstract class IServiceProvider extends IResolutionScope implements IDisposable {
   public abstract readonly Services: IServiceCollection;
   public abstract createScope(): IScopedProvider;
+  public abstract [Symbol.dispose](): void;
 }
 
 export abstract class IServiceCollection {
