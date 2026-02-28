@@ -1,5 +1,15 @@
 # Changelog
 
+## [3.1.6] - 2026-02-28
+
+### Security
+
+- Fixed [GHSA-mw96-cpmx-2vgc](https://github.com/advisories/GHSA-mw96-cpmx-2vgc) rollup arbitrary file write via path traversal
+
+### Changed
+
+- Updated all dependencies to latest versions
+
 ## [3.1.5] - 2026-02-23
 
 ### Fixed
@@ -176,6 +186,7 @@
 
 Initial release.
 
+[3.1.6]: https://github.com/shellicar/core-di/releases/tag/3.1.6
 [3.1.5]: https://github.com/shellicar/core-di/releases/tag/3.1.5
 [3.1.4]: https://github.com/shellicar/core-di/releases/tag/3.1.4
 [3.1.3]: https://github.com/shellicar/core-di/releases/tag/3.1.3
